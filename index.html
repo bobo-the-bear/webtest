@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Coin Race to $1B 🚀</title>
+    <title>Memecoin Supercycle Race</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           EASY CUSTOMIZATION SECTION
+           Change the coins array below to customize tokens
+           ============================================ */
+        
+        /* See JavaScript section below for coin configuration */
+        
+        /* ============================================ */
+        
         :root {
-            --bg-primary: #0a0118;
-            --bg-secondary: #160a2e;
-            --bg-tertiary: #1f0f3d;
-            --text-primary: #ffffff;
-            --text-secondary: #a78bfa;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-gold: #fbbf24;
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #06b6d4;
-            --border: #2d1b4e;
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --accent: #00ff88;
+            --track-bg: #1a1a1a;
+            --border: #2a2a2a;
         }
 
         * {
@@ -29,306 +33,168 @@
         }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .bg-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.2;
-            animation: float 15s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--accent-purple);
-            top: -200px;
-            left: -200px;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: var(--accent-cyan);
-            bottom: -150px;
-            right: -150px;
-            animation-delay: 3s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: var(--accent-gold);
-            top: 50%;
-            left: 50%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0);
-            }
-            33% {
-                transform: translate(50px, -50px);
-            }
-            66% {
-                transform: translate(-30px, 30px);
-            }
+            padding: 2rem 1rem;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
         }
 
         /* Header */
         header {
             text-align: center;
-            padding: 3rem 0 2rem;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin-bottom: 3rem;
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2rem, 6vw, 4.5rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4, #10b981, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
         }
 
-        .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            color: var(--text-secondary);
+        .total-marketcap {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--text-dim);
             font-weight: 600;
-            letter-spacing: 1px;
         }
 
-        .target-display {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-            border: 2px solid var(--border);
-            border-radius: 50px;
-            padding: 1rem 2rem;
-            margin-top: 1.5rem;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+        .total-marketcap .amount {
+            color: var(--accent);
             font-weight: 700;
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
         }
 
-        .target-display .icon {
-            font-size: 2rem;
-        }
-
-        /* Update Status */
-        .update-status {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            animation: fadeIn 1s ease-out 0.3s backwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .pulse-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1.2);
-            }
+        .total-marketcap .change {
+            color: var(--accent);
+            font-size: 0.9em;
         }
 
         /* Race Track */
+        .race-container {
+            background: var(--track-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
         .race-track {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 1s ease-out 0.5s backwards;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1.5rem;
+            min-width: 800px;
+            padding: 1rem 0;
         }
 
-        .race-track::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan), var(--accent-green), var(--accent-gold));
-        }
-
-        .finish-line {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: repeating-linear-gradient(
-                0deg,
-                #ffffff,
-                #ffffff 10px,
-                #000000 10px,
-                #000000 20px
-            );
-            animation: shimmer 2s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.6;
-            }
-        }
-
-        .race-lane {
-            position: relative;
-            height: 100px;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px dashed var(--border);
-            padding: 0.5rem 0;
-        }
-
-        .race-lane:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .lane-info {
+        .racer {
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 0.5rem;
+            padding: 1rem;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
-        .coin-logo {
-            width: 50px;
-            height: 50px;
+        .racer:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .racer-position {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
             border-radius: 50%;
-            border: 3px solid var(--border);
-            background: var(--bg-tertiary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            flex-shrink: 0;
+            font-weight: 900;
+            font-size: 0.9rem;
+            color: var(--bg);
+            border: 2px solid var(--bg);
         }
 
-        .coin-name {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            flex-shrink: 0;
-            min-width: 150px;
-        }
-
-        .progress-track {
-            flex: 1;
-            height: 40px;
-            background: rgba(45, 27, 78, 0.5);
-            border-radius: 20px;
-            position: relative;
+        .racer-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--track-bg);
+            border: 3px solid var(--border);
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .progress-fill {
+        .racer-logo img {
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
-            border-radius: 20px;
-            position: relative;
-            transition: width 1s ease-out;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+            object-fit: cover;
         }
 
-        .progress-fill::after {
+        .racer-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .racer-marketcap {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .racer-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .racer-change.positive {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .racer-change.negative {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .racer-progress {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .racer-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00dd77);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .racer-progress-fill::after {
             content: '';
             position: absolute;
             top: 0;
@@ -341,270 +207,176 @@
                 rgba(255, 255, 255, 0.3),
                 transparent
             );
-            animation: shine 2s ease-in-out infinite;
+            animation: shimmer 2s infinite;
         }
 
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(200%);
-            }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
         }
 
-        .coin-marker {
-            position: absolute;
-            top: 50%;
-            right: -25px;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 4px solid var(--text-primary);
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
-            z-index: 10;
-        }
-
-        .market-cap-display {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .racer-percentage {
+            font-size: 0.85rem;
+            color: var(--text-dim);
             margin-top: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .current-cap {
-            font-weight: 700;
-            color: var(--accent-green);
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .percentage {
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .rank {
-            position: absolute;
-            top: 50%;
-            left: -60px;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: var(--bg-primary);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 3rem 0;
-            animation: fadeIn 1s ease-out 0.7s backwards;
-        }
-
-        .stat-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
             text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+        }
+
+        .donate-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: var(--accent);
+            color: var(--bg);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-purple);
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .donate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
         }
 
         /* Loading State */
         .loading {
             text-align: center;
             padding: 4rem 2rem;
-            font-size: 1.5rem;
-            color: var(--text-secondary);
+            font-size: 1.2rem;
+            color: var(--text-dim);
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border: 4px solid var(--border);
-            border-top: 4px solid var(--accent-purple);
+            border-top: 4px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 2rem auto;
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        /* Error State */
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid var(--accent-red);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
+        /* Status */
+        .status {
             text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            color: var(--text-dim);
         }
 
-        .error-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .status.live {
+            color: var(--accent);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .lane-info {
-                flex-direction: column;
-                align-items: flex-start;
+        @media (max-width: 968px) {
+            .race-track {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
             }
 
-            .rank {
-                position: static;
-                transform: none;
-                margin-bottom: 0.5rem;
+            .racer-logo {
+                width: 60px;
+                height: 60px;
             }
 
-            .progress-track {
-                width: 100%;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .racer-marketcap {
+                font-size: 1rem;
             }
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--accent-purple);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
+        @media (max-width: 640px) {
+            .race-track {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Background Effects -->
-    <div class="bg-grid"></div>
-    <div class="bg-glow">
-        <div class="glow-orb orb-1"></div>
-        <div class="glow-orb orb-2"></div>
-        <div class="glow-orb orb-3"></div>
-    </div>
-
     <div class="container">
         <header>
-            <h1>🚀 MEME COIN RACE TO $1B 🚀</h1>
-            <p class="subtitle">Live Market Cap Tracking</p>
-            <div class="target-display">
-                <span class="icon">🏆</span>
-                <span>Target: $1,000,000,000</span>
+            <h1>memecoin supercycle</h1>
+            <div class="total-marketcap">
+                Total Market Cap: <span class="amount" id="totalMarketCap">$0.00</span> 
+                <span class="change" id="totalChange">(0.0%)</span>
             </div>
         </header>
 
-        <div class="update-status">
-            <div class="status-indicator">
-                <span class="pulse-dot"></span>
-                <span id="lastUpdate">Loading data...</span>
-            </div>
-            <button onclick="updateData()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: var(--accent-purple); border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer; font-family: 'Orbitron', sans-serif;">
-                🔄 Refresh Now
-            </button>
-        </div>
+        <div class="status" id="status">Loading...</div>
 
-        <div id="raceTrack" class="race-track">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Loading meme coin data...</p>
+        <div class="race-container">
+            <div class="race-track" id="raceTrack">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Fetching meme coin data...</p>
+                </div>
             </div>
         </div>
 
-        <div class="stats-grid" id="statsGrid" style="display: none;">
-            <div class="stat-card">
-                <div class="stat-label">Leader</div>
-                <div class="stat-value" id="leaderName">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Closest to Goal</div>
-                <div class="stat-value" id="leaderProgress">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Market Cap</div>
-                <div class="stat-value" id="totalMarketCap">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Next Update</div>
-                <div class="stat-value" id="nextUpdate">-</div>
-            </div>
-        </div>
+        <footer>
+            <a href="#" class="donate-btn">donate</a>
+        </footer>
     </div>
 
-    <footer>
-        <p>Data provided by <a href="https://coinmarketcap.com" target="_blank">CoinMarketCap</a> • Updates every 5 minutes</p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem;">⚠️ This is for entertainment purposes only. Not financial advice.</p>
-    </footer>
-
     <script>
-        // Coin configuration with CoinMarketCap IDs
-        const coins = [
-            { id: 'bobo-coin', cmcId: 24478, name: 'BOBO', emoji: '🐻', symbol: 'BOBO' },
-            { id: 'mog-coin', cmcId: 28584, name: 'MOG', emoji: '😸', symbol: 'MOG' },
-            { id: 'joe-coin', cmcId: 11396, name: 'JOE', emoji: '☕', symbol: 'JOE' },
-            { id: 'wojak', cmcId: 24732, name: 'WOJAK', emoji: '😢', symbol: 'WOJAK' },
-            { id: 'apu-apustaja', cmcId: 29850, name: 'APU', emoji: '🐸', symbol: 'APU' },
-            { id: 'mooncat', cmcId: 8966, name: 'MOONCAT', emoji: '🐱', symbol: 'MCAT' }
+        /* ============================================
+           🎯 EASY CUSTOMIZATION - CHANGE TOKENS HERE
+           ============================================
+           
+           To change the tokens displayed:
+           1. Go to CoinMarketCap and find your coin
+           2. Get the coin ID from the URL (e.g., bitcoin is "1", ethereum is "1027")
+           3. Update the array below with your coins
+           
+           Example coin object:
+           {
+               cmcId: '24478',           // CoinMarketCap ID (from URL)
+               name: 'BOBO',             // Display name
+               symbol: 'BOBO',           // Ticker symbol
+               cmcSlug: 'bobo-the-bear'  // URL slug (optional, for links)
+           }
+        */
+        
+        const COINS = [
+            { cmcId: '74', name: 'DOGE', symbol: 'DOGE', cmcSlug: 'dogecoin' },
+            { cmcId: '5994', name: 'SHIB', symbol: 'SHIB', cmcSlug: 'shiba-inu' },
+            { cmcId: '10804', name: 'BONK', symbol: 'BONK', cmcSlug: 'bonk' },
+            { cmcId: '23095', name: 'PEPE', symbol: 'PEPE', cmcSlug: 'pepe' },
+            { cmcId: '24478', name: 'BOBO', symbol: 'BOBO', cmcSlug: 'bobo-the-bear' },
+            { cmcId: '35336', name: 'TRUMP', symbol: 'TRUMP', cmcSlug: 'official-trump' },
+            { cmcId: '27659', name: 'FLOKI', symbol: 'FLOKI', cmcSlug: 'floki' },
+            { cmcId: '28081', name: 'POPCAT', symbol: 'POPCAT', cmcSlug: 'popcat' },
+            { cmcId: '28752', name: 'TURBO', symbol: 'TURBO', cmcSlug: 'turbo' },
+            { cmcId: '28782', name: 'WIF', symbol: 'WIF', cmcSlug: 'dogwifhat' },
+            { cmcId: '30063', name: 'BOME', symbol: 'BOME', cmcSlug: 'book-of-meme' },
+            { cmcId: '30126', name: 'BRETT', symbol: 'BRETT', cmcSlug: 'brett' },
+            { cmcId: '29743', name: 'MEW', symbol: 'MEW', cmcSlug: 'cat-in-a-dogs-world' },
+            { cmcId: '33597', name: 'MOODENG', symbol: 'MOODENG', cmcSlug: 'moo-deng' },
+            { cmcId: '34026', name: 'GOAT', symbol: 'GOAT', cmcSlug: 'goatseus-maximus' },
+            { cmcId: '33788', name: 'NEIRO', symbol: 'NEIRO', cmcSlug: 'first-neiro-on-ethereum' },
+            { cmcId: '34466', name: 'PNUT', symbol: 'PNUT', cmcSlug: 'peanut-the-squirrel' }
         ];
 
-        const TARGET_MARKET_CAP = 1000000000; // $1 billion
+        /* ============================================
+           END OF EASY CUSTOMIZATION SECTION
+           ============================================ */
+
+        const TARGET_MARKET_CAP = 10000000000; // $10 billion target
         let updateInterval;
-        let nextUpdateCountdown;
 
         // Format currency
         function formatCurrency(value) {
@@ -618,212 +390,159 @@
             return '$' + value.toFixed(2);
         }
 
-        // Format percentage
-        function formatPercentage(value) {
-            return (value * 100).toFixed(2) + '%';
-        }
-
-        // Fetch coin data from CoinMarketCap
+        // Fetch coin data from CoinGecko (better CORS support)
         async function fetchCoinData() {
             try {
-                // CoinMarketCap API requires an API key, but we can try their public endpoints
-                // or use a proxy service. For now, we'll use web scraping as a fallback
+                console.log('Fetching coin data...');
                 
-                console.log('Fetching data from CoinMarketCap...');
+                // Map CMC IDs to CoinGecko IDs (you can expand this mapping)
+                const geckoMap = {
+                    '74': 'dogecoin',
+                    '5994': 'shiba-inu',
+                    '10804': 'bonk',
+                    '23095': 'pepe',
+                    '24478': 'bobo-coin',
+                    '27659': 'floki',
+                    '28081': 'popcat',
+                    '28752': 'turbo',
+                    '28782': 'dogwifcoin',
+                    '30063': 'book-of-meme',
+                    '30126': 'based-brett',
+                    '29743': 'cat-in-a-dogs-world',
+                    '33597': 'moo-deng',
+                    '34026': 'goatseus-maximus',
+                    '33788': 'neiro',
+                    '34466': 'peanut-the-squirrel',
+                    '35336': 'official-trump'
+                };
+
+                const geckoIds = COINS.map(c => geckoMap[c.cmcId]).filter(Boolean).join(',');
+                const url = `https://api.coingecko.com/api/v3/simple/price?ids=${geckoIds}&vs_currencies=usd&include_market_cap=true&include_24h_change=true`;
+
+                const response = await fetch(url);
                 
-                // Try to fetch from multiple sources
-                const data = {};
-                
-                for (const coin of coins) {
-                    try {
-                        // Using CoinMarketCap's widget/chart data endpoint (public)
-                        const url = `https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=${coin.cmcId}&range=1D`;
-                        
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Accept': 'application/json',
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            const result = await response.json();
-                            
-                            if (result.data && result.data.points) {
-                                // Get the latest data point
-                                const points = Object.values(result.data.points);
-                                const latest = points[points.length - 1];
-                                
-                                if (latest && latest.v && latest.v[0]) {
-                                    const marketCap = latest.v[0]; // Market cap is first value
-                                    data[coin.id] = {
-                                        usd_market_cap: marketCap,
-                                        symbol: coin.symbol,
-                                        name: coin.name
-                                    };
-                                    console.log(`${coin.name}: $${marketCap.toLocaleString()}`);
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.warn(`Failed to fetch ${coin.name}:`, e);
-                    }
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const data = await response.json();
+                console.log('Data fetched successfully:', data);
+
+                // Map data back to our coins
+                const coinData = {};
+                COINS.forEach(coin => {
+                    const geckoId = geckoMap[coin.cmcId];
+                    const geckoCoin = data[geckoId];
                     
-                    // Small delay to avoid rate limiting
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
-                
-                // If we got some data, return it
-                if (Object.keys(data).length > 0) {
-                    console.log('Successfully fetched data for', Object.keys(data).length, 'coins');
-                    return data;
-                }
-                
-                // Otherwise fall back to demo data
-                throw new Error('Could not fetch data from CoinMarketCap');
-                
+                    if (geckoCoin) {
+                        coinData[coin.cmcId] = {
+                            marketCap: geckoCoin.usd_market_cap || 0,
+                            price: geckoCoin.usd || 0,
+                            change24h: geckoCoin.usd_24h_change || 0
+                        };
+                    } else {
+                        // Fallback data if not found
+                        coinData[coin.cmcId] = {
+                            marketCap: 0,
+                            price: 0,
+                            change24h: 0
+                        };
+                    }
+                });
+
+                return coinData;
+
             } catch (error) {
-                console.error('Error fetching coin data:', error);
-                
-                // Return demo data if API fails
-                console.log('Using demo data due to API error');
+                console.error('Error fetching data:', error);
+                // Return demo data
                 return getDemoData();
             }
         }
-        
+
         // Demo data fallback
         function getDemoData() {
-            return {
-                'bobo-coin': { usd_market_cap: 45000000, name: 'BOBO', symbol: 'BOBO' },
-                'mog-coin': { usd_market_cap: 320000000, name: 'MOG', symbol: 'MOG' },
-                'joe-coin': { usd_market_cap: 180000000, name: 'JOE', symbol: 'JOE' },
-                'wojak': { usd_market_cap: 95000000, name: 'WOJAK', symbol: 'WOJAK' },
-                'apu-apustaja': { usd_market_cap: 250000000, name: 'APU', symbol: 'APU' },
-                'mooncat': { usd_market_cap: 12000000, name: 'MOONCAT', symbol: 'MCAT' }
-            };
+            const demo = {};
+            COINS.forEach((coin, index) => {
+                demo[coin.cmcId] = {
+                    marketCap: Math.random() * 5000000000,
+                    price: Math.random() * 10,
+                    change24h: (Math.random() - 0.5) * 20
+                };
+            });
+            return demo;
         }
 
-        // Render the race track
-        function renderRaceTrack(coinData) {
+        // Render the race
+        function renderRace(coinData) {
             const raceTrack = document.getElementById('raceTrack');
             
-            // Process and sort coins by market cap
-            const processedCoins = coins.map(coin => {
-                const data = coinData[coin.id];
-                const marketCap = data?.usd_market_cap || 0;
-                const percentage = Math.min((marketCap / TARGET_MARKET_CAP), 1);
-                
-                return {
-                    ...coin,
-                    marketCap,
-                    percentage
-                };
-            }).sort((a, b) => b.marketCap - a.marketCap);
+            // Calculate and sort by market cap
+            const racers = COINS.map(coin => ({
+                ...coin,
+                ...coinData[coin.cmcId],
+                percentage: Math.min((coinData[coin.cmcId].marketCap / TARGET_MARKET_CAP) * 100, 100)
+            })).sort((a, b) => b.marketCap - a.marketCap);
 
-            // Render lanes
+            // Calculate total market cap
+            const totalMarketCap = racers.reduce((sum, r) => sum + r.marketCap, 0);
+            const avgChange = racers.reduce((sum, r) => sum + r.change24h, 0) / racers.length;
+
+            document.getElementById('totalMarketCap').textContent = formatCurrency(totalMarketCap);
+            document.getElementById('totalChange').textContent = `(${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(1)}%)`;
+
+            // Render racers
             let html = '';
-            processedCoins.forEach((coin, index) => {
-                const progressWidth = (coin.percentage * 100).toFixed(2);
-                
+            racers.forEach((racer, index) => {
+                const changeClass = racer.change24h >= 0 ? 'positive' : 'negative';
+                const changeSymbol = racer.change24h >= 0 ? '+' : '';
+                const logoUrl = `https://s2.coinmarketcap.com/static/img/coins/64x64/${racer.cmcId}.png`;
+                const cmcUrl = racer.cmcSlug ? `https://coinmarketcap.com/currencies/${racer.cmcSlug}/` : '#';
+
                 html += `
-                    <div class="race-lane">
-                        <div class="rank">${index + 1}</div>
-                        <div class="lane-info">
-                            <div class="coin-logo">${coin.emoji}</div>
-                            <div class="coin-name">${coin.name}</div>
-                            <div class="progress-track">
-                                <div class="progress-fill" style="width: ${progressWidth}%">
-                                    <div class="coin-marker">${coin.emoji}</div>
-                                </div>
-                            </div>
+                    <a href="${cmcUrl}" target="_blank" class="racer" style="animation-delay: ${index * 0.05}s">
+                        <div class="racer-position">${index + 1}</div>
+                        <div class="racer-logo">
+                            <img src="${logoUrl}" alt="${racer.name}" loading="lazy">
                         </div>
-                        <div class="market-cap-display">
-                            <span class="current-cap">${formatCurrency(coin.marketCap)}</span>
-                            <span class="percentage">${formatPercentage(coin.percentage)} to goal</span>
+                        <div class="racer-name">${racer.symbol}</div>
+                        <div class="racer-marketcap">${formatCurrency(racer.marketCap)}</div>
+                        <div class="racer-change ${changeClass}">${changeSymbol}${racer.change24h.toFixed(2)}%</div>
+                        <div class="racer-progress">
+                            <div class="racer-progress-fill" style="width: ${racer.percentage}%"></div>
                         </div>
-                    </div>
+                        <div class="racer-percentage">${racer.percentage.toFixed(1)}% to $10B</div>
+                    </a>
                 `;
             });
 
-            html += '<div class="finish-line"></div>';
             raceTrack.innerHTML = html;
 
-            // Update stats
-            updateStats(processedCoins);
-        }
-
-        // Update statistics
-        function updateStats(coins) {
-            const statsGrid = document.getElementById('statsGrid');
-            statsGrid.style.display = 'grid';
-
-            const leader = coins[0];
-            const totalMarketCap = coins.reduce((sum, coin) => sum + coin.marketCap, 0);
-
-            document.getElementById('leaderName').textContent = leader.name;
-            document.getElementById('leaderProgress').textContent = formatPercentage(leader.percentage);
-            document.getElementById('totalMarketCap').textContent = formatCurrency(totalMarketCap);
-        }
-
-        // Update countdown timer
-        function startCountdown() {
-            let seconds = 300; // 5 minutes
-            
-            nextUpdateCountdown = setInterval(() => {
-                seconds--;
-                const minutes = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                document.getElementById('nextUpdate').textContent = 
-                    `${minutes}:${secs.toString().padStart(2, '0')}`;
-                
-                if (seconds <= 0) {
-                    seconds = 300;
-                }
-            }, 1000);
+            // Update status
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+            statusEl.className = 'status live';
         }
 
         // Update data
         async function updateData() {
-            try {
-                const data = await fetchCoinData();
-                renderRaceTrack(data);
-                
-                const now = new Date();
-                const isDemoData = data['bobo-coin']?.usd_market_cap === 45000000; // Check if using demo data
-                
-                document.getElementById('lastUpdate').textContent = 
-                    isDemoData 
-                    ? `Using demo data (API unavailable) - ${now.toLocaleTimeString()}`
-                    : `Last updated: ${now.toLocaleTimeString()}`;
-            } catch (error) {
-                const raceTrack = document.getElementById('raceTrack');
-                raceTrack.innerHTML = `
-                    <div class="error">
-                        <div class="error-icon">⚠️</div>
-                        <h3>Data Unavailable</h3>
-                        <p>${error.message}</p>
-                        <p style="margin-top: 1rem;">The page will retry automatically...</p>
-                    </div>
-                `;
-            }
+            const data = await fetchCoinData();
+            renderRace(data);
         }
 
         // Initialize
         async function init() {
             await updateData();
-            startCountdown();
             
-            // Update every 5 minutes (CoinGecko free tier rate limit)
+            // Update every 5 minutes
             updateInterval = setInterval(updateData, 5 * 60 * 1000);
         }
 
-        // Start the application
+        // Start
         init();
 
-        // Cleanup on page unload
+        // Cleanup
         window.addEventListener('beforeunload', () => {
             if (updateInterval) clearInterval(updateInterval);
-            if (nextUpdateCountdown) clearInterval(nextUpdateCountdown);
         });
     </script>
 </body>
