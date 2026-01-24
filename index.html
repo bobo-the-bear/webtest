@@ -65,12 +65,12 @@
             color: #ff0000;
         }
 
-        /* Race Grid - 70% smaller */
+        /* Race Grid - 25% smaller */
         .race-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.125rem;
+            margin-bottom: 2.25rem;
         }
 
         .coin-card {
@@ -99,7 +99,7 @@
             justify-content: center;
             background: #000000;
             border-bottom: 1px solid #333333;
-            padding: 1rem;
+            padding: 1.5rem;
         }
 
         .coin-logo {
@@ -110,19 +110,19 @@
         }
 
         .coin-info {
-            padding: 0.75rem;
+            padding: 1.125rem;
             text-align: center;
         }
 
         .coin-marketcap {
-            font-size: 0.9rem;
+            font-size: 1.125rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.375rem;
             color: #ffffff;
         }
 
         .coin-change {
-            font-size: 0.65rem;
+            font-size: 0.675rem;
             font-weight: 600;
         }
 
@@ -135,20 +135,20 @@
         }
 
         .coin-name {
-            font-size: 0.6rem;
+            font-size: 0.6375rem;
             color: #888888;
-            margin-top: 0.25rem;
+            margin-top: 0.375rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        /* Rank Badge - 70% smaller */
+        /* Rank Badge - 25% smaller */
         .rank-badge {
             position: absolute;
-            top: 0.5rem;
-            left: 0.5rem;
-            width: 20px;
-            height: 20px;
+            top: 0.75rem;
+            left: 0.75rem;
+            width: 24px;
+            height: 24px;
             background: #ffffff;
             color: #000000;
             border-radius: 50%;
@@ -156,7 +156,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 0.6rem;
+            font-size: 0.675rem;
             z-index: 10;
         }
 
@@ -291,8 +291,7 @@
         <header>
             <h1>memecoin supercycle</h1>
             <div class="total-marketcap">
-                Total Market Cap: <span class="amount" id="totalMarketCap">$0.00</span> 
-                <span class="change" id="totalChange">(0.0%)</span>
+                Total Market Cap: <span class="amount" id="totalMarketCap">$0.00</span>
             </div>
         </header>
 
@@ -417,9 +416,6 @@
 
             // Update header stats
             document.getElementById('totalMarketCap').textContent = formatCurrency(totalMarketCap);
-            const changeEl = document.getElementById('totalChange');
-            changeEl.textContent = `(${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(1)}%)`;
-            changeEl.className = 'change ' + (avgChange >= 0 ? 'positive' : 'negative');
 
             // Render coin cards
             let html = '';
