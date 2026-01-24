@@ -52,89 +52,61 @@
             font-weight: 600;
         }
 
-        .total-marketcap .change {
-            color: #888888;
-            font-size: 0.9em;
-        }
-
-        .total-marketcap .change.positive {
-            color: #00ff00;
-        }
-
-        .total-marketcap .change.negative {
-            color: #ff0000;
-        }
-
-        /* Race Grid - 25% smaller */
-        .race-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.125rem;
+        /* Race Container */
+        .race-container {
+            position: relative;
+            min-height: 800px;
             margin-bottom: 2.25rem;
         }
 
         .coin-card {
+            position: absolute;
             background: #000000;
-            border: 1px solid #333333;
-            border-radius: 0;
-            padding: 0;
-            transition: all 0.2s ease;
+            padding: 1rem;
+            transition: all 0.3s ease;
             cursor: pointer;
             text-decoration: none;
             color: inherit;
-            display: block;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .coin-card:hover {
-            border-color: #666666;
-            transform: translateY(-2px);
-        }
-
-        .coin-logo-container {
-            width: 100%;
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000000;
-            border-bottom: 1px solid #333333;
-            padding: 1.5rem;
+            transform: scale(1.05);
         }
 
         .coin-logo {
-            max-width: 80%;
-            max-height: 80%;
-            width: auto;
-            height: auto;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: contain;
         }
 
         .coin-info {
-            padding: 1.125rem;
             text-align: center;
         }
 
         .coin-marketcap {
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 0.375rem;
             color: #ffffff;
+            margin-bottom: 0.25rem;
         }
 
         .coin-name {
-            font-size: 0.6375rem;
+            font-size: 0.75rem;
             color: #888888;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        /* Rank Badge - 25% smaller */
+        /* Rank Badge */
         .rank-badge {
             position: absolute;
-            top: 0.75rem;
-            left: 0.75rem;
+            top: 0;
+            right: 0;
             width: 24px;
             height: 24px;
             background: #ffffff;
@@ -220,56 +192,35 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .race-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.75rem;
-            }
-
-            .coin-logo-container {
-                padding: 0.75rem;
-            }
-
-            .coin-info {
-                padding: 0.5rem;
+            .coin-logo {
+                width: 60px;
+                height: 60px;
             }
 
             .coin-marketcap {
-                font-size: 0.75rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .race-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-
-            .coin-logo-container {
-                padding: 0.5rem;
+                font-size: 0.85rem;
             }
 
             .rank-badge {
-                width: 16px;
-                height: 16px;
-                font-size: 0.5rem;
-                top: 0.25rem;
-                left: 0.25rem;
+                width: 20px;
+                height: 20px;
+                font-size: 0.6rem;
             }
         }
 
         /* Animations */
         .coin-card {
-            animation: fadeIn 0.5s ease-out backwards;
+            animation: fadeIn 0.6s ease-out backwards;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: scale(0.8);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1);
             }
         }
     </style>
@@ -285,7 +236,7 @@
 
         <div class="status" id="status">Loading...</div>
 
-        <div class="race-grid" id="raceGrid">
+        <div class="race-container" id="raceContainer">
             <div class="loading">
                 <div class="spinner"></div>
                 <p>Fetching coin data...</p>
@@ -358,6 +309,14 @@
             return '$' + value.toFixed(2);
         }
 
+        // Random position within bounds
+        function getRandomPosition(containerWidth, containerHeight, itemWidth, itemHeight, yMin, yMax) {
+            const maxX = containerWidth - itemWidth - 40;
+            const x = Math.random() * Math.max(0, maxX) + 20;
+            const y = yMin + Math.random() * (yMax - yMin);
+            return { x, y };
+        }
+
         // Fetch coin data from CoinGecko
         async function fetchCoinData() {
             try {
@@ -381,11 +340,13 @@
             }
         }
 
-        // Render the race grid
+        // Render the race container with random positioning
         function renderRace(coinData) {
             if (!coinData) return;
 
-            const grid = document.getElementById('raceGrid');
+            const container = document.getElementById('raceContainer');
+            const containerWidth = container.offsetWidth;
+            const containerHeight = 800;
 
             // Process and sort coins by market cap
             const coins = COINS.map(coin => {
@@ -398,28 +359,44 @@
                 };
             }).sort((a, b) => b.marketCap - a.marketCap);
 
-            // Calculate total market cap and average change
+            // Calculate total market cap
             const totalMarketCap = coins.reduce((sum, c) => sum + c.marketCap, 0);
-            const avgChange = coins.reduce((sum, c) => sum + c.change24h, 0) / coins.length;
-
-            // Update header stats
             document.getElementById('totalMarketCap').textContent = formatCurrency(totalMarketCap);
 
-            // Render coin cards
+            // Divide coins into tiers based on market cap
+            // Higher market cap = higher on page (lower Y position)
+            const tierHeight = containerHeight / 3;
+            
+            // Render coin cards with random X position but Y based on market cap
             let html = '';
             coins.forEach((coin, index) => {
                 const rank = index + 1;
-                const changeClass = coin.change24h >= 0 ? 'positive' : 'negative';
-                const changeSymbol = coin.change24h >= 0 ? '+' : '';
                 const logoUrl = `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.cmcId}.png`;
                 const cmcUrl = `https://coinmarketcap.com/currencies/${coin.cmcSlug}/`;
 
+                // Determine Y range based on rank (higher rank = higher on page)
+                let yMin, yMax;
+                if (rank <= 2) {
+                    // Top tier - top third of container
+                    yMin = 0;
+                    yMax = tierHeight;
+                } else if (rank <= 4) {
+                    // Middle tier
+                    yMin = tierHeight;
+                    yMax = tierHeight * 2;
+                } else {
+                    // Bottom tier
+                    yMin = tierHeight * 2;
+                    yMax = containerHeight - 150;
+                }
+
+                const position = getRandomPosition(containerWidth, containerHeight, 120, 150, yMin, yMax);
+
                 html += `
-                    <a href="${cmcUrl}" target="_blank" class="coin-card" style="animation-delay: ${index * 0.05}s">
+                    <a href="${cmcUrl}" target="_blank" class="coin-card" 
+                       style="left: ${position.x}px; top: ${position.y}px; animation-delay: ${index * 0.1}s">
                         <div class="rank-badge rank-${rank}">${rank}</div>
-                        <div class="coin-logo-container">
-                            <img src="${logoUrl}" alt="${coin.name}" class="coin-logo" loading="lazy">
-                        </div>
+                        <img src="${logoUrl}" alt="${coin.name}" class="coin-logo" loading="lazy">
                         <div class="coin-info">
                             <div class="coin-marketcap">${formatCurrency(coin.marketCap)}</div>
                             <div class="coin-name">${coin.symbol}</div>
@@ -428,7 +405,7 @@
                 `;
             });
 
-            grid.innerHTML = html;
+            container.innerHTML = html;
 
             // Update status
             document.getElementById('status').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
@@ -452,6 +429,18 @@
 
         // Start
         init();
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const data = document.getElementById('raceContainer').innerHTML;
+                if (data && !data.includes('loading')) {
+                    updateData();
+                }
+            }, 500);
+        });
 
         // Cleanup
         window.addEventListener('beforeunload', () => {
