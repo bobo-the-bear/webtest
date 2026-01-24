@@ -63,7 +63,7 @@
             position: absolute;
             background: #000000;
             padding: 1rem;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
             cursor: pointer;
             text-decoration: none;
             color: inherit;
@@ -74,7 +74,7 @@
         }
 
         .coin-card:hover {
-            transform: scale(1.05);
+            opacity: 0.7;
         }
 
         .coin-logo {
@@ -363,38 +363,31 @@
             const totalMarketCap = coins.reduce((sum, c) => sum + c.marketCap, 0);
             document.getElementById('totalMarketCap').textContent = formatCurrency(totalMarketCap);
 
-            // Divide coins into tiers based on market cap
-            // Higher market cap = higher on page (lower Y position)
-            const tierHeight = containerHeight / 3;
+            // Divide coins into positions based on market cap rank
+            // Higher market cap (rank 1) = top of page (lower Y value)
+            // Lower market cap (rank 6) = bottom of page (higher Y value)
+            const maxY = containerHeight - 150; // Leave space at bottom
             
-            // Render coin cards with random X position but Y based on market cap
+            // Render coin cards with random X position but Y strictly based on rank
             let html = '';
             coins.forEach((coin, index) => {
                 const rank = index + 1;
                 const logoUrl = `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.cmcId}.png`;
                 const cmcUrl = `https://coinmarketcap.com/currencies/${coin.cmcSlug}/`;
 
-                // Determine Y range based on rank (higher rank = higher on page)
-                let yMin, yMax;
-                if (rank <= 2) {
-                    // Top tier - top third of container
-                    yMin = 0;
-                    yMax = tierHeight;
-                } else if (rank <= 4) {
-                    // Middle tier
-                    yMin = tierHeight;
-                    yMax = tierHeight * 2;
-                } else {
-                    // Bottom tier
-                    yMin = tierHeight * 2;
-                    yMax = containerHeight - 150;
-                }
+                // Calculate Y position based on rank (rank 1 at top, rank 6 at bottom)
+                // Add some randomness but maintain order
+                const baseY = ((rank - 1) / (coins.length - 1)) * maxY;
+                const randomOffset = (Math.random() - 0.5) * 40; // Small random offset ±20px
+                const yPosition = Math.max(0, Math.min(maxY, baseY + randomOffset));
 
-                const position = getRandomPosition(containerWidth, containerHeight, 120, 150, yMin, yMax);
+                // Random X position
+                const maxX = containerWidth - 120 - 40;
+                const xPosition = Math.random() * Math.max(0, maxX) + 20;
 
                 html += `
                     <a href="${cmcUrl}" target="_blank" class="coin-card" 
-                       style="left: ${position.x}px; top: ${position.y}px; animation-delay: ${index * 0.1}s">
+                       style="left: ${xPosition}px; top: ${yPosition}px; animation-delay: ${index * 0.1}s">
                         <div class="rank-badge rank-${rank}">${rank}</div>
                         <img src="${logoUrl}" alt="${coin.name}" class="coin-logo" loading="lazy">
                         <div class="coin-info">
