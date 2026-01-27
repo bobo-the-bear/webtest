@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bobo Coin Honey Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bobo-brown: #8B5A3C;
+            --bobo-red: #DC143C;
+            --honey-gold: #FFB627;
+            --honey-dark: #E89C1F;
+            --cream: #FFF8E7;
+            --dark-brown: #4A3228;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #FFE4B5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(255, 182, 39, 0.03) 35px, rgba(255, 182, 39, 0.03) 70px),
+                repeating-linear-gradient(60deg, transparent, transparent 35px, rgba(255, 182, 39, 0.03) 35px, rgba(255, 182, 39, 0.03) 70px),
+                repeating-linear-gradient(120deg, transparent, transparent 35px, rgba(255, 182, 39, 0.03) 35px, rgba(255, 182, 39, 0.03) 70px);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--bobo-red);
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 0px var(--bobo-brown), 
+                         6px 6px 0px rgba(139, 90, 60, 0.3);
+            animation: bounce 2s ease-in-out infinite;
+            letter-spacing: -2px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--dark-brown);
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        .tracker-display {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 60px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .bobo-container {
+            position: relative;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .bobo-character {
+            width: clamp(200px, 30vw, 350px);
+            height: auto;
+            filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .honey-pot-container {
+            position: relative;
+            animation: slideInRight 1s ease-out;
+            width: clamp(250px, 28vw, 380px);
+            height: clamp(300px, 35vw, 450px);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .honey-pot {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
+            animation: gentle-float 4s ease-in-out infinite;
+        }
+
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .jar-body {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            height: 85%;
+            background: rgba(255, 165, 0, 0.15);
+            border: 5px solid #000;
+            border-radius: 8% 8% 12% 12% / 3% 3% 8% 8%;
+            overflow: hidden;
+            box-shadow: 
+                inset -15px 0 25px rgba(0, 0, 0, 0.08),
+                inset 15px 0 25px rgba(255, 255, 255, 0.15);
+        }
+
+        .jar-body::before {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 12%;
+            width: 25%;
+            height: 50%;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                transparent 100%
+            );
+            border-radius: 50%;
+            filter: blur(15px);
+        }
+
+        .honey-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0%;
+            background: linear-gradient(180deg,
+                #FFD700 0%,
+                #FFC700 30%,
+                #FFB700 70%,
+                #F0A500 100%
+            );
+            border-radius: 0 0 12% 12% / 0 0 8% 8%;
+            transition: height 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                inset 0 10px 25px rgba(255, 255, 255, 0.4),
+                inset 0 -5px 20px rgba(0, 0, 0, 0.1);
+            animation: honey-shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes honey-shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.12); }
+        }
+
+        .honey-fill::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 20%;
+            width: 40%;
+            height: 60px;
+            background: radial-gradient(ellipse at center,
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 80%
+            );
+            border-radius: 50%;
+            filter: blur(15px);
+        }
+
+        .percentage-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            color: var(--bobo-red);
+            text-shadow: 
+                3px 3px 0 white,
+                5px 5px 0 var(--dark-brown),
+                7px 7px 25px rgba(0, 0, 0, 0.4);
+            z-index: 25;
+            animation: pulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            border: 4px solid var(--bobo-brown);
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 8px 8px 0 var(--bobo-red);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 12px 12px 0 var(--bobo-red);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--dark-brown);
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-family: 'Fredoka', cursive;
+            font-size: 2.5rem;
+            color: var(--bobo-red);
+            font-weight: 700;
+        }
+
+        /* Addresses Section */
+        .addresses-section {
+            margin-top: 80px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            border: 4px solid var(--bobo-brown);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .addresses-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--bobo-red);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0px var(--bobo-brown);
+        }
+
+        .addresses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .address-card {
+            background: white;
+            border: 3px solid var(--bobo-brown);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 4px 4px 0 var(--honey-gold);
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0 var(--honey-gold);
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .address-label {
+            font-size: 0.85rem;
+            color: var(--dark-brown);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .address-link {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--bobo-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .address-link:hover {
+            background: var(--bobo-brown);
+        }
+
+        .address-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--dark-brown);
+            word-break: break-all;
+            padding: 10px;
+            background: rgba(255, 182, 39, 0.1);
+            border-radius: 8px;
+        }
+
+        .footer-note {
+            margin-top: 60px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            border: 2px dashed var(--bobo-brown);
+            backdrop-filter: blur(5px);
+        }
+
+        .footer-note p {
+            color: var(--dark-brown);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .tracker-display {
+                gap: 30px;
+            }
+            
+            h1 {
+                margin-bottom: 15px;
+            }
+            
+            .stats-container {
+                gap: 20px;
+            }
+
+            .addresses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BOBO COIN HONEY TRACKER</h1>
+        <div class="subtitle">🍯 Watch the honey pot fill as more BOBO gets burned! 🍯</div>
+        
+        <div class="tracker-display">
+            <div class="bobo-container">
+                <img src="bobocutout3.png" alt="Bobo pointing" class="bobo-character">
+            </div>
+            
+            <div class="honey-pot-container">
+                <div class="honey-pot">
+                    <div class="jar-body">
+                        <div class="honey-fill" id="honeyFill"></div>
+                    </div>
+                    <div class="percentage-display" id="percentageDisplay">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-label">Total Burned</div>
+                <div class="stat-value" id="totalBurned">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Market Cap</div>
+                <div class="stat-value" id="marketCap">Loading...</div>
+            </div>
+        </div>
+
+        <div class="addresses-section">
+            <h2 class="addresses-title">🔗 Tracked Addresses</h2>
+            <div class="addresses-grid" id="addressesGrid"></div>
+        </div>
+
+        <div class="footer-note">
+            <p>Market cap data is fetched live from CoinGecko and updates every 60 seconds.</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🔧 CONFIGURATION
+        // ==========================================
+        const BURN_PERCENTAGE = 11.6;
+        const TOTAL_SUPPLY = 69000000000000; // 69 trillion
+        const BOBO_TOKEN_ADDRESS = '0xB90B2A35C65dBC466b04240097Ca756ad2005295';
+        
+        const TRACKED_ADDRESSES = [
+            { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Wallet 1' },
+            { address: '0x8af9A00844ae064544278109c930b4E59b827a22', label: 'Wallet 2' },
+            { address: '0xd39bc2D6A3629f33852e9Fc054f3931B47678442', label: 'Wallet 3' },
+            { address: '0x19b8309324A96803D9355F6026F3448Dcd502B3E', label: 'Wallet 4' },
+            { address: '0xD7636434aD60eF5ee150788b08CfAaa6cc42A69c', label: 'Wallet 5' },
+            { address: '0x43b7002D9844143732b803AE2902176D736B2FE7', label: 'Wallet 6' },
+            { address: '0x86226d93916ce7903328235981B9dF00707d3FCC', label: 'Wallet 7' },
+            { address: '0x0684acE6AB926860B53b3687138F45D1feE96874', label: 'Wallet 8' },
+            { address: '0xF96B521D4237a518f65EB910c8995cd50828556F', label: 'Base Buy Backs' },
+            { address: '0x000000000000000000000000000000000000dEaD', label: 'Dead Address' }
+        ];
+        // ==========================================
+
+        const totalBurned = (BURN_PERCENTAGE / 100) * TOTAL_SUPPLY;
+
+        // Fetch market cap from CoinGecko API
+        async function fetchMarketCap() {
+            const marketCapDisplay = document.getElementById('marketCap');
+            
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/bobo-coin');
+                const data = await response.json();
+                
+                if (data && data.market_data && data.market_data.market_cap) {
+                    const marketCap = data.market_data.market_cap.usd;
+                    marketCapDisplay.textContent = formatCurrency(marketCap);
+                } else {
+                    marketCapDisplay.textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error('Error fetching market cap:', error);
+                marketCapDisplay.textContent = 'Error';
+            }
+        }
+
+        // Format currency with proper abbreviations
+        function formatCurrency(num) {
+            if (num >= 1000000000) {
+                return '$' + (num / 1000000000).toFixed(2) + 'B';
+            } else if (num >= 1000000) {
+                return '$' + (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return '$' + (num / 1000).toFixed(2) + 'K';
+            }
+            return '$' + num.toFixed(2);
+        }
+
+        // Create address cards
+        function createAddressCards() {
+            const addressesGrid = document.getElementById('addressesGrid');
+            
+            TRACKED_ADDRESSES.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'address-card';
+                card.innerHTML = `
+                    <div class="address-header">
+                        <span class="address-label">${item.label}</span>
+                        <a href="https://etherscan.io/address/${item.address}" target="_blank" class="address-link">
+                            View on Etherscan
+                        </a>
+                    </div>
+                    <div class="address-text">${item.address}</div>
+                `;
+                addressesGrid.appendChild(card);
+            });
+        }
+
+        function updateBurnTracker() {
+            const honeyFill = document.getElementById('honeyFill');
+            const percentageDisplay = document.getElementById('percentageDisplay');
+            const totalBurnedDisplay = document.getElementById('totalBurned');
+
+            const clampedPercentage = Math.max(0, Math.min(100, BURN_PERCENTAGE));
+
+            setTimeout(() => {
+                honeyFill.style.height = `${clampedPercentage}%`;
+            }, 500);
+
+            let currentPercentage = 0;
+            const percentageInterval = setInterval(() => {
+                currentPercentage += clampedPercentage / 50;
+                if (currentPercentage >= clampedPercentage) {
+                    currentPercentage = clampedPercentage;
+                    clearInterval(percentageInterval);
+                }
+                percentageDisplay.textContent = `${currentPercentage.toFixed(1)}%`;
+            }, 30);
+
+            const formatNumber = (num) => {
+                if (num >= 1000000000000) {
+                    return (num / 1000000000000).toFixed(2) + 'T';
+                } else if (num >= 1000000000) {
+                    return (num / 1000000000).toFixed(2) + 'B';
+                } else if (num >= 1000000) {
+                    return (num / 1000000).toFixed(2) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(2) + 'K';
+                }
+                return num.toFixed(0);
+            };
+
+            totalBurnedDisplay.textContent = formatNumber(totalBurned);
+            
+            // Fetch market cap data
+            fetchMarketCap();
+            
+            // Create address cards
+            createAddressCards();
+            
+            // Refresh market cap every 60 seconds
+            setInterval(() => {
+                fetchMarketCap();
+            }, 60000);
+        }
+
+        window.addEventListener('load', updateBurnTracker);
+    </script>
+</body>
+</html>
