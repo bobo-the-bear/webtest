@@ -415,7 +415,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🍯 BOBO COIN HONEY TRACKER 🍯</h1>
+        <h1>BOBO COIN HONEY TRACKER 🍯</h1>
         <div class="subtitle">Watch the honey pot fill as more BOBO gets burned!</div>
         
         <div class="tracker-display">
@@ -454,7 +454,7 @@
         </div>
 
         <div class="footer-note">
-            <p>Market cap and Base Buy Backs balance are fetched live and update every 60 seconds.</p>
+            <p><strong>💡 Configuration:</strong> Update <code>BURN_PERCENTAGE</code> and <code>BASE_BUYBACKS</code> in the JavaScript section (around line 465) to change values. Market cap updates live from CoinGecko every 60 seconds.</p>
         </div>
     </div>
 
@@ -462,21 +462,21 @@
         // ==========================================
         // 🔧 CONFIGURATION
         // ==========================================
-        const BURN_PERCENTAGE = 11.5;
+        const BURN_PERCENTAGE = 11.6;
         const TOTAL_SUPPLY = 69000000000000; // 69 trillion
-        const BOBO_TOKEN_ADDRESS = '0x69F8968B98a6b66DfC0363466347A1E386D39B14';
-        const BUYBACK_WALLET = '0xF96B521D4237a518f65EB910c8995cd50828556F';
+        const BOBO_TOKEN_ADDRESS = '0xB90B2A35C65dBC466b04240097Ca756ad2005295';
+        const BASE_BUYBACKS = 204005725361; // Change this value manually (in tokens)
         
         const TRACKED_ADDRESSES = [
-            { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Contract' },
-            { address: '0x8af9A00844ae064544278109c930b4E59b827a22', label: 'Wallet 1' },
-            { address: '0xd39bc2D6A3629f33852e9Fc054f3931B47678442', label: 'Wallet 2' },
-            { address: '0x19b8309324A96803D9355F6026F3448Dcd502B3E', label: 'Wallet 3' },
-            { address: '0xD7636434aD60eF5ee150788b08CfAaa6cc42A69c', label: 'Wallet 4' },
-            { address: '0x43b7002D9844143732b803AE2902176D736B2FE7', label: 'Wallet 5' },
-            { address: '0x86226d93916ce7903328235981B9dF00707d3FCC', label: 'Wallet 6' },
-            { address: '0x0684acE6AB926860B53b3687138F45D1feE96874', label: 'Wallet 7' },
-            { address: '0xF96B521D4237a518f65EB910c8995cd50828556F', label: 'Wallet 8' },
+            { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Wallet 1' },
+            { address: '0x8af9A00844ae064544278109c930b4E59b827a22', label: 'Wallet 2' },
+            { address: '0xd39bc2D6A3629f33852e9Fc054f3931B47678442', label: 'Wallet 3' },
+            { address: '0x19b8309324A96803D9355F6026F3448Dcd502B3E', label: 'Wallet 4' },
+            { address: '0xD7636434aD60eF5ee150788b08CfAaa6cc42A69c', label: 'Wallet 5' },
+            { address: '0x43b7002D9844143732b803AE2902176D736B2FE7', label: 'Wallet 6' },
+            { address: '0x86226d93916ce7903328235981B9dF00707d3FCC', label: 'Wallet 7' },
+            { address: '0x0684acE6AB926860B53b3687138F45D1feE96874', label: 'Wallet 8' },
+            { address: '0xF96B521D4237a518f65EB910c8995cd50828556F', label: 'Base Buy Backs' },
             { address: '0x000000000000000000000000000000000000dEaD', label: 'Dead Address' }
         ];
         // ==========================================
@@ -500,29 +500,6 @@
             } catch (error) {
                 console.error('Error fetching market cap:', error);
                 marketCapDisplay.textContent = 'Error';
-            }
-        }
-
-        // Fetch buyback wallet balance
-        async function fetchBuybackBalance() {
-            const buybackDisplay = document.getElementById('buybackBalance');
-            
-            try {
-                const apiUrl = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${BOBO_TOKEN_ADDRESS}&address=${BUYBACK_WALLET}&tag=latest`;
-                
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.status === '1' && data.result) {
-                    // Convert from wei to tokens (assuming 18 decimals)
-                    const balance = parseFloat(data.result) / Math.pow(10, 18);
-                    buybackDisplay.textContent = formatTokens(balance);
-                } else {
-                    buybackDisplay.textContent = 'N/A';
-                }
-            } catch (error) {
-                console.error('Error fetching buyback balance:', error);
-                buybackDisplay.textContent = 'Error';
             }
         }
 
@@ -609,19 +586,19 @@
 
             totalBurnedDisplay.textContent = formatNumber(totalBurned);
             
+            // Set Base Buy Backs value manually
+            const buybackDisplay = document.getElementById('buybackBalance');
+            buybackDisplay.textContent = formatTokens(BASE_BUYBACKS);
+            
             // Fetch market cap data
             fetchMarketCap();
-            
-            // Fetch buyback wallet balance
-            fetchBuybackBalance();
             
             // Create address cards
             createAddressCards();
             
-            // Refresh market cap and buyback balance every 60 seconds
+            // Refresh market cap every 60 seconds
             setInterval(() => {
                 fetchMarketCap();
-                fetchBuybackBalance();
             }, 60000);
         }
 
