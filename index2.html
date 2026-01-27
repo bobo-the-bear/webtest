@@ -329,7 +329,7 @@
         
         <div class="tracker-display">
             <div class="bobo-container">
-                <img src="bobocutout2.png" alt="Bobo pointing" class="bobo-character">
+                <img src="/mnt/user-data/uploads/bobocutout3.png" alt="Bobo pointing" class="bobo-character">
             </div>
             
             <div class="honey-pot-container">
@@ -354,7 +354,7 @@
         </div>
 
         <div class="footer-note">
-            <p><strong>💡 For Developers:</strong> Market cap data is fetched live from CoinGecko.</p>
+            <p><strong>💡 For Developers:</strong> Update the burn percentage by changing the <code>BURN_PERCENTAGE</code> variable in the JavaScript section below (line ~330). Valid range: 0-100. Market cap data is fetched live from CoinGecko.</p>
         </div>
     </div>
 
@@ -363,9 +363,9 @@
         // 🔧 CONFIGURATION - UPDATE THIS VALUE
         // ==========================================
         const BURN_PERCENTAGE = 11.5; // Change this value (0-100)
+        const TOTAL_SUPPLY = 69000000000000; // 69 trillion
         // ==========================================
 
-        const TOTAL_SUPPLY = 1000000000;
         const totalBurned = (BURN_PERCENTAGE / 100) * TOTAL_SUPPLY;
 
         // Fetch market cap from CoinGecko API
@@ -422,7 +422,9 @@
             }, 30);
 
             const formatNumber = (num) => {
-                if (num >= 1000000000) {
+                if (num >= 1000000000000) {
+                    return (num / 1000000000000).toFixed(2) + 'T';
+                } else if (num >= 1000000000) {
                     return (num / 1000000000).toFixed(2) + 'B';
                 } else if (num >= 1000000) {
                     return (num / 1000000).toFixed(2) + 'M';
