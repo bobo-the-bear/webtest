@@ -378,7 +378,25 @@
 
         @media (max-width: 768px) {
             .tracker-display {
-                gap: 30px;
+                gap: 20px;
+                align-items: center;
+            }
+            
+            .bobo-container {
+                order: 1;
+            }
+            
+            .honey-pot-container {
+                order: 2;
+            }
+            
+            .bobo-character {
+                width: clamp(120px, 35vw, 200px);
+            }
+            
+            .honey-pot-container {
+                width: clamp(150px, 35vw, 250px);
+                height: clamp(180px, 42vw, 300px);
             }
             
             h1 {
@@ -442,7 +460,7 @@
         // ==========================================
         const BURN_PERCENTAGE = 11.6;
         const TOTAL_SUPPLY = 69000000000000; // 69 trillion
-        const BOBO_TOKEN_ADDRESS = '0xB90B2A35C65dBC466b04240097Ca756ad2005295';
+        const BOBO_TOKEN_ADDRESS = '0x69F8968B98a6b66DfC0363466347A1E386D39B14';
         
         const TRACKED_ADDRESSES = [
             { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Wallet 1' },
