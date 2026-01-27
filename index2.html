@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bobo Coin Honey Pot</title>
+    <title>Bobo Coin Burn Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -32,7 +32,6 @@
             overflow-x: hidden;
         }
 
-        /* Decorative honeycomb background */
         body::before {
             content: '';
             position: absolute;
@@ -119,8 +118,8 @@
         .honey-pot-container {
             position: relative;
             animation: slideInRight 1s ease-out;
-            width: clamp(280px, 30vw, 420px);
-            height: clamp(320px, 35vw, 480px);
+            width: clamp(250px, 28vw, 380px);
+            height: clamp(300px, 35vw, 450px);
         }
 
         @keyframes slideInRight {
@@ -138,7 +137,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
             animation: gentle-float 4s ease-in-out infinite;
         }
 
@@ -147,222 +146,41 @@
             50% { transform: translateY(-12px); }
         }
 
-        /* Honey Dipper Stick */
-        .dipper-stick {
+        /* Simple Jar Body */
+        .jar-body {
             position: absolute;
-            top: -5%;
-            right: 10%;
-            width: 15%;
-            height: 45%;
-            background: linear-gradient(135deg, #C19A6B 0%, #8B7355 100%);
-            border-radius: 50px;
-            transform: rotate(-25deg);
-            z-index: 25;
-            box-shadow: 
-                inset -2px 0 4px rgba(0, 0, 0, 0.3),
-                3px 3px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .dipper-head {
-            position: absolute;
-            bottom: -15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 140%;
-            height: 25%;
-            background: linear-gradient(180deg, #A0826D 0%, #8B7355 100%);
-            border-radius: 50%;
-            box-shadow: 
-                inset 0 -2px 5px rgba(0, 0, 0, 0.3),
-                0 3px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .dipper-grooves {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .dipper-grooves::before,
-        .dipper-grooves::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 0, 0, 0.2);
-            left: 0;
-        }
-
-        .dipper-grooves::before { top: 30%; }
-        .dipper-grooves::after { top: 60%; }
-
-        /* Pot Lid */
-        .pot-lid {
-            position: absolute;
-            top: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 78%;
-            height: 18%;
-            background: linear-gradient(180deg, 
-                #FFD966 0%, 
-                #F5C842 25%,
-                #E8B838 50%,
-                #D9A730 75%,
-                #CC9B2E 100%
-            );
-            border-radius: 50%;
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.25),
-                inset 0 -4px 10px rgba(0, 0, 0, 0.15),
-                inset 0 4px 10px rgba(255, 255, 255, 0.4);
-            z-index: 20;
-        }
-
-        .pot-lid::before {
-            content: '';
-            position: absolute;
-            top: -12%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 22%;
-            height: 50%;
-            background: linear-gradient(180deg, #F5C842 0%, #CC9B2E 100%);
-            border-radius: 50%;
-            box-shadow: 
-                0 4px 12px rgba(0, 0, 0, 0.3),
-                inset 0 2px 6px rgba(255, 255, 255, 0.3);
-        }
-
-        .pot-lid::after {
-            content: '';
-            position: absolute;
-            top: 15%;
-            left: 15%;
-            width: 35%;
-            height: 50%;
-            background: radial-gradient(ellipse at 30% 30%, 
-                rgba(255, 255, 255, 0.5) 0%,
-                rgba(255, 255, 255, 0.2) 40%,
-                transparent 70%
-            );
-            border-radius: 50%;
-            filter: blur(6px);
-        }
-
-        /* Main Pot Body */
-        .pot-body {
-            position: absolute;
-            top: 22%;
+            top: 10%;
             left: 50%;
             transform: translateX(-50%);
             width: 85%;
-            height: 68%;
-            background: linear-gradient(180deg,
-                #FFD966 0%,
-                #F5C842 15%,
-                #F0C040 30%,
-                #E8B838 50%,
-                #D9A730 70%,
-                #CC9B2E 85%,
-                #B8882A 100%
-            );
-            border-radius: 48% 48% 50% 50% / 25% 25% 52% 52%;
+            height: 85%;
+            background: rgba(255, 165, 0, 0.15);
+            border: 5px solid #000;
+            border-radius: 8% 8% 12% 12% / 3% 3% 8% 8%;
             overflow: hidden;
             box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.3),
-                inset -20px 0 35px rgba(0, 0, 0, 0.12),
-                inset 20px 0 35px rgba(255, 255, 255, 0.15);
+                inset -15px 0 25px rgba(0, 0, 0, 0.08),
+                inset 15px 0 25px rgba(255, 255, 255, 0.15);
         }
 
-        /* Pot Shine/Highlight */
-        .pot-body::before {
+        /* Glass shine effect */
+        .jar-body::before {
             content: '';
             position: absolute;
-            top: 8%;
+            top: 5%;
             left: 12%;
-            width: 30%;
-            height: 45%;
-            background: radial-gradient(ellipse at 30% 30%,
-                rgba(255, 255, 255, 0.6) 0%,
-                rgba(255, 255, 255, 0.3) 40%,
-                transparent 70%
-            );
-            border-radius: 50%;
-            filter: blur(12px);
-        }
-
-        /* Pot Shadow */
-        .pot-body::after {
-            content: '';
-            position: absolute;
-            top: 10%;
-            right: 12%;
-            width: 22%;
+            width: 25%;
             height: 50%;
-            background: radial-gradient(ellipse at 70% 30%,
-                rgba(0, 0, 0, 0.15) 0%,
-                rgba(0, 0, 0, 0.08) 50%,
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
                 transparent 100%
             );
             border-radius: 50%;
-            filter: blur(10px);
+            filter: blur(15px);
         }
 
-        /* Honey Drips on Outside */
-        .honey-drip {
-            position: absolute;
-            background: linear-gradient(180deg, 
-                #FFD700 0%,
-                #FFC700 50%,
-                #F0B000 100%
-            );
-            border-radius: 50% 50% 60% 60% / 40% 40% 60% 60%;
-            z-index: 15;
-            box-shadow: 
-                inset 0 3px 6px rgba(255, 255, 255, 0.5),
-                0 3px 8px rgba(0, 0, 0, 0.25);
-            animation: drip-shine 3s ease-in-out infinite;
-        }
-
-        @keyframes drip-shine {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.15); }
-        }
-
-        .honey-drip:nth-child(1) {
-            top: 30%;
-            left: 8%;
-            width: 18px;
-            height: 55px;
-            animation-delay: 0s;
-        }
-
-        .honey-drip:nth-child(2) {
-            top: 28%;
-            left: 28%;
-            width: 22px;
-            height: 65px;
-            animation-delay: 0.8s;
-        }
-
-        .honey-drip:nth-child(3) {
-            top: 26%;
-            right: 28%;
-            width: 20px;
-            height: 60px;
-            animation-delay: 1.6s;
-        }
-
-        .honey-drip:nth-child(4) {
-            top: 32%;
-            right: 10%;
-            width: 16px;
-            height: 48px;
-            animation-delay: 2.4s;
-        }
-
-        /* Honey Fill Inside Pot */
+        /* Honey Fill inside jar */
         .honey-fill {
             position: absolute;
             bottom: 0;
@@ -370,14 +188,16 @@
             right: 0;
             height: 0%;
             background: linear-gradient(180deg,
-                rgba(255, 215, 0, 0.85) 0%,
-                rgba(255, 199, 0, 0.9) 30%,
-                rgba(255, 183, 0, 0.95) 70%,
-                rgba(240, 160, 0, 1) 100%
+                #FFD700 0%,
+                #FFC700 30%,
+                #FFB700 70%,
+                #F0A500 100%
             );
-            border-radius: 0 0 50% 50% / 0 0 52% 52%;
+            border-radius: 0 0 12% 12% / 0 0 8% 8%;
             transition: height 2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: inset 0 10px 25px rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                inset 0 10px 25px rgba(255, 255, 255, 0.4),
+                inset 0 -5px 20px rgba(0, 0, 0, 0.1);
             animation: honey-shimmer 3s ease-in-out infinite;
         }
 
@@ -386,20 +206,21 @@
             50% { filter: brightness(1.12); }
         }
 
+        /* Honey surface shine */
         .honey-fill::before {
             content: '';
             position: absolute;
             top: 5px;
             left: 20%;
             width: 40%;
-            height: 50px;
+            height: 60px;
             background: radial-gradient(ellipse at center,
-                rgba(255, 255, 255, 0.5) 0%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
                 transparent 80%
             );
             border-radius: 50%;
-            filter: blur(12px);
+            filter: blur(15px);
         }
 
         .percentage-display {
@@ -410,12 +231,12 @@
             font-family: 'Fredoka', cursive;
             font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 700;
-            color: white;
+            color: var(--bobo-red);
             text-shadow: 
-                3px 3px 0 var(--bobo-red),
+                3px 3px 0 white,
                 5px 5px 0 var(--dark-brown),
-                7px 7px 25px rgba(0, 0, 0, 0.6);
-            z-index: 20;
+                7px 7px 25px rgba(0, 0, 0, 0.4);
+            z-index: 25;
             animation: pulse 2s ease-in-out infinite;
             pointer-events: none;
         }
@@ -461,69 +282,6 @@
             font-size: 2.5rem;
             color: var(--bobo-red);
             font-weight: 700;
-        }
-
-        .drip-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            overflow: visible;
-            pointer-events: none;
-            z-index: 15;
-        }
-
-        .drip {
-            position: absolute;
-            background: linear-gradient(180deg, #FFD700 0%, #F0A500 100%);
-            border-radius: 50% 50% 60% 60% / 40% 40% 60% 60%;
-            box-shadow: 
-                inset 0 2px 4px rgba(255, 255, 255, 0.5),
-                0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .drip:nth-child(1) {
-            top: 25%;
-            left: 18%;
-            width: 20px;
-            height: 45px;
-            animation: drip-pulse 4s ease-in-out infinite;
-        }
-
-        .drip:nth-child(2) {
-            top: 22%;
-            left: 45%;
-            width: 25px;
-            height: 55px;
-            animation: drip-pulse 4s ease-in-out infinite 1s;
-        }
-
-        .drip:nth-child(3) {
-            top: 28%;
-            right: 15%;
-            width: 18px;
-            height: 40px;
-            animation: drip-pulse 4s ease-in-out infinite 2s;
-        }
-
-        .drip:nth-child(4) {
-            top: 18%;
-            left: 65%;
-            width: 22px;
-            height: 50px;
-            animation: drip-pulse 4s ease-in-out infinite 0.5s;
-        }
-
-        @keyframes drip-pulse {
-            0%, 100% { 
-                transform: scaleY(1);
-                filter: brightness(1);
-            }
-            50% { 
-                transform: scaleY(1.03);
-                filter: brightness(1.1);
-            }
         }
 
         .footer-note {
@@ -576,17 +334,7 @@
             
             <div class="honey-pot-container">
                 <div class="honey-pot">
-                    <div class="dipper-stick">
-                        <div class="dipper-head">
-                            <div class="dipper-grooves"></div>
-                        </div>
-                    </div>
-                    <div class="pot-lid"></div>
-                    <div class="pot-body">
-                        <div class="honey-drip"></div>
-                        <div class="honey-drip"></div>
-                        <div class="honey-drip"></div>
-                        <div class="honey-drip"></div>
+                    <div class="jar-body">
                         <div class="honey-fill" id="honeyFill"></div>
                     </div>
                     <div class="percentage-display" id="percentageDisplay">0%</div>
@@ -600,13 +348,13 @@
                 <div class="stat-value" id="totalBurned">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Burn Rate</div>
-                <div class="stat-value" id="burnRate">0%</div>
+                <div class="stat-label">Market Cap</div>
+                <div class="stat-value" id="marketCap">Loading...</div>
             </div>
         </div>
 
         <div class="footer-note">
-            <p><strong>💡 For Developers:</strong> Update the burn percentage by changing the <code>BURN_PERCENTAGE</code> variable in the JavaScript section below (line ~350). Valid range: 0-100.</p>
+            <p><strong>💡 For Developers:</strong> Update the burn percentage by changing the <code>BURN_PERCENTAGE</code> variable in the JavaScript section below (line ~330). Valid range: 0-100. Market cap data is fetched live from CoinGecko.</p>
         </div>
     </div>
 
@@ -614,30 +362,55 @@
         // ==========================================
         // 🔧 CONFIGURATION - UPDATE THIS VALUE
         // ==========================================
-        const BURN_PERCENTAGE = 10.5; // Change this value (0-100)
+        const BURN_PERCENTAGE = 42.5; // Change this value (0-100)
         // ==========================================
 
-        // Calculate total burned based on percentage
-        // Assuming 1 billion total supply for example
         const TOTAL_SUPPLY = 1000000000;
         const totalBurned = (BURN_PERCENTAGE / 100) * TOTAL_SUPPLY;
 
-        // Update the display
+        // Fetch market cap from CoinGecko API
+        async function fetchMarketCap() {
+            const marketCapDisplay = document.getElementById('marketCap');
+            
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/bobo-coin');
+                const data = await response.json();
+                
+                if (data && data.market_data && data.market_data.market_cap) {
+                    const marketCap = data.market_data.market_cap.usd;
+                    marketCapDisplay.textContent = formatCurrency(marketCap);
+                } else {
+                    marketCapDisplay.textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error('Error fetching market cap:', error);
+                marketCapDisplay.textContent = 'Error';
+            }
+        }
+
+        // Format currency with proper abbreviations
+        function formatCurrency(num) {
+            if (num >= 1000000000) {
+                return '$' + (num / 1000000000).toFixed(2) + 'B';
+            } else if (num >= 1000000) {
+                return '$' + (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return '$' + (num / 1000).toFixed(2) + 'K';
+            }
+            return '$' + num.toFixed(2);
+        }
+
         function updateBurnTracker() {
             const honeyFill = document.getElementById('honeyFill');
             const percentageDisplay = document.getElementById('percentageDisplay');
             const totalBurnedDisplay = document.getElementById('totalBurned');
-            const burnRateDisplay = document.getElementById('burnRate');
 
-            // Clamp percentage between 0 and 100
             const clampedPercentage = Math.max(0, Math.min(100, BURN_PERCENTAGE));
 
-            // Animate the honey fill
             setTimeout(() => {
                 honeyFill.style.height = `${clampedPercentage}%`;
             }, 500);
 
-            // Animate the percentage counter
             let currentPercentage = 0;
             const percentageInterval = setInterval(() => {
                 currentPercentage += clampedPercentage / 50;
@@ -648,7 +421,6 @@
                 percentageDisplay.textContent = `${currentPercentage.toFixed(1)}%`;
             }, 30);
 
-            // Format and display total burned
             const formatNumber = (num) => {
                 if (num >= 1000000000) {
                     return (num / 1000000000).toFixed(2) + 'B';
@@ -661,10 +433,14 @@
             };
 
             totalBurnedDisplay.textContent = formatNumber(totalBurned);
-            burnRateDisplay.textContent = `${clampedPercentage.toFixed(1)}%`;
+            
+            // Fetch market cap data
+            fetchMarketCap();
+            
+            // Refresh market cap every 60 seconds
+            setInterval(fetchMarketCap, 60000);
         }
 
-        // Initialize on page load
         window.addEventListener('load', updateBurnTracker);
     </script>
 </body>
