@@ -442,6 +442,10 @@
                 <div class="stat-label">Market Cap</div>
                 <div class="stat-value" id="marketCap">Loading...</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-label">Base Buy Backs</div>
+                <div class="stat-value" id="buybackBalance">Loading...</div>
+            </div>
         </div>
 
         <div class="addresses-section">
@@ -450,7 +454,7 @@
         </div>
 
         <div class="footer-note">
-            <p>Market cap data is fetched live from CoinGecko and updates every 60 seconds.</p>
+            <p>Market cap updates live from CoinGecko every 60 seconds.</p>
         </div>
     </div>
 
@@ -460,7 +464,8 @@
         // ==========================================
         const BURN_PERCENTAGE = 11.6;
         const TOTAL_SUPPLY = 69000000000000; // 69 trillion
-        const BOBO_TOKEN_ADDRESS = '0x69F8968B98a6b66DfC0363466347A1E386D39B14';
+        const BOBO_TOKEN_ADDRESS = '0xB90B2A35C65dBC466b04240097Ca756ad2005295';
+        const BASE_BUYBACKS = 204005725361; // Change this value manually (in tokens)
         
         const TRACKED_ADDRESSES = [
             { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Wallet 1' },
@@ -508,6 +513,21 @@
                 return '$' + (num / 1000).toFixed(2) + 'K';
             }
             return '$' + num.toFixed(2);
+        }
+
+        // Format token amount
+        function formatTokens(num) {
+            if (num === null) return 'Error';
+            if (num >= 1000000000000) {
+                return (num / 1000000000000).toFixed(2) + 'T';
+            } else if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(2) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(2) + 'K';
+            }
+            return num.toFixed(2);
         }
 
         // Create address cards
@@ -565,6 +585,10 @@
             };
 
             totalBurnedDisplay.textContent = formatNumber(totalBurned);
+            
+            // Set Base Buy Backs value manually
+            const buybackDisplay = document.getElementById('buybackBalance');
+            buybackDisplay.textContent = formatTokens(BASE_BUYBACKS);
             
             // Fetch market cap data
             fetchMarketCap();
