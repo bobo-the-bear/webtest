@@ -146,7 +146,6 @@
             50% { transform: translateY(-12px); }
         }
 
-        /* Simple Jar Body */
         .jar-body {
             position: absolute;
             top: 10%;
@@ -163,7 +162,6 @@
                 inset 15px 0 25px rgba(255, 255, 255, 0.15);
         }
 
-        /* Glass shine effect */
         .jar-body::before {
             content: '';
             position: absolute;
@@ -180,7 +178,6 @@
             filter: blur(15px);
         }
 
-        /* Honey Fill inside jar */
         .honey-fill {
             position: absolute;
             bottom: 0;
@@ -206,7 +203,6 @@
             50% { filter: brightness(1.12); }
         }
 
-        /* Honey surface shine */
         .honey-fill::before {
             content: '';
             position: absolute;
@@ -284,6 +280,107 @@
             font-weight: 700;
         }
 
+        /* Addresses Section */
+        .addresses-section {
+            margin-top: 80px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            border: 4px solid var(--bobo-brown);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .addresses-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--bobo-red);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0px var(--bobo-brown);
+        }
+
+        .addresses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .address-card {
+            background: white;
+            border: 3px solid var(--bobo-brown);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 4px 4px 0 var(--honey-gold);
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0 var(--honey-gold);
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .address-label {
+            font-size: 0.85rem;
+            color: var(--dark-brown);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .address-link {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--bobo-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .address-link:hover {
+            background: var(--bobo-brown);
+        }
+
+        .address-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--dark-brown);
+            word-break: break-all;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 182, 39, 0.1);
+            border-radius: 8px;
+        }
+
+        .address-balance {
+            font-family: 'Fredoka', cursive;
+            font-size: 1.5rem;
+            color: var(--bobo-red);
+            font-weight: 700;
+        }
+
+        .balance-label {
+            font-size: 0.75rem;
+            color: var(--dark-brown);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            color: var(--honey-dark);
+            font-style: italic;
+        }
+
         .footer-note {
             margin-top: 60px;
             padding: 20px;
@@ -299,14 +396,6 @@
             line-height: 1.6;
         }
 
-        .footer-note code {
-            background: var(--bobo-red);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-        }
-
         @media (max-width: 768px) {
             .tracker-display {
                 gap: 30px;
@@ -318,6 +407,10 @@
             
             .stats-container {
                 gap: 20px;
+            }
+
+            .addresses-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -353,17 +446,36 @@
             </div>
         </div>
 
+        <div class="addresses-section">
+            <h2 class="addresses-title">🔗 Tracked Addresses</h2>
+            <div class="addresses-grid" id="addressesGrid"></div>
+        </div>
+
         <div class="footer-note">
-            <p>Market cap data is fetched live from CoinGecko.</p>
+            <p>Market cap data is fetched live from CoinGecko. Address balances update every 60 seconds.</p>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // 🔧 CONFIGURATION - UPDATE THIS VALUE
+        // 🔧 CONFIGURATION
         // ==========================================
-        const BURN_PERCENTAGE = 11.5; // Change this value (0-100)
+        const BURN_PERCENTAGE = 11.5;
         const TOTAL_SUPPLY = 69000000000000; // 69 trillion
+        const BOBO_TOKEN_ADDRESS = '0x69F8968B98a6b66DfC0363466347A1E386D39B14';
+        
+        const TRACKED_ADDRESSES = [
+            { address: '0x69F8968B98a6b66DfC0363466347A1E386D39B14', label: 'Contract' },
+            { address: '0x8af9A00844ae064544278109c930b4E59b827a22', label: 'Wallet 1' },
+            { address: '0xd39bc2D6A3629f33852e9Fc054f3931B47678442', label: 'Wallet 2' },
+            { address: '0x19b8309324A96803D9355F6026F3448Dcd502B3E', label: 'Wallet 3' },
+            { address: '0xD7636434aD60eF5ee150788b08CfAaa6cc42A69c', label: 'Wallet 4' },
+            { address: '0x43b7002D9844143732b803AE2902176D736B2FE7', label: 'Wallet 5' },
+            { address: '0x86226d93916ce7903328235981B9dF00707d3FCC', label: 'Wallet 6' },
+            { address: '0x0684acE6AB926860B53b3687138F45D1feE96874', label: 'Wallet 7' },
+            { address: '0xF96B521D4237a518f65EB910c8995cd50828556F', label: 'Base Buy Backs' },
+            { address: '0x000000000000000000000000000000000000dEaD', label: 'Dead Address' }
+        ];
         // ==========================================
 
         const totalBurned = (BURN_PERCENTAGE / 100) * TOTAL_SUPPLY;
@@ -388,6 +500,29 @@
             }
         }
 
+        // Fetch token balance for an address using Etherscan API
+        async function fetchAddressBalance(address) {
+            try {
+                // Using Etherscan API to get token balance
+                // Note: You may need to add your own Etherscan API key for production use
+                const apiUrl = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${BOBO_TOKEN_ADDRESS}&address=${address}&tag=latest`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.status === '1' && data.result) {
+                    // Convert from wei to tokens (assuming 18 decimals)
+                    const balance = parseFloat(data.result) / Math.pow(10, 18);
+                    return balance;
+                } else {
+                    return 0;
+                }
+            } catch (error) {
+                console.error(`Error fetching balance for ${address}:`, error);
+                return null;
+            }
+        }
+
         // Format currency with proper abbreviations
         function formatCurrency(num) {
             if (num >= 1000000000) {
@@ -398,6 +533,53 @@
                 return '$' + (num / 1000).toFixed(2) + 'K';
             }
             return '$' + num.toFixed(2);
+        }
+
+        // Format token amount
+        function formatTokens(num) {
+            if (num === null) return 'Error';
+            if (num >= 1000000000000) {
+                return (num / 1000000000000).toFixed(2) + 'T';
+            } else if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(2) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(2) + 'K';
+            }
+            return num.toFixed(2);
+        }
+
+        // Create address cards
+        function createAddressCards() {
+            const addressesGrid = document.getElementById('addressesGrid');
+            
+            TRACKED_ADDRESSES.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'address-card';
+                card.innerHTML = `
+                    <div class="address-header">
+                        <span class="address-label">${item.label}</span>
+                        <a href="https://etherscan.io/address/${item.address}" target="_blank" class="address-link">
+                            View on Etherscan
+                        </a>
+                    </div>
+                    <div class="address-text">${item.address}</div>
+                    <div class="balance-label">Balance:</div>
+                    <div class="address-balance loading" id="balance-${item.address}">Loading...</div>
+                `;
+                addressesGrid.appendChild(card);
+            });
+        }
+
+        // Update all address balances
+        async function updateAddressBalances() {
+            for (const item of TRACKED_ADDRESSES) {
+                const balanceElement = document.getElementById(`balance-${item.address}`);
+                const balance = await fetchAddressBalance(item.address);
+                balanceElement.textContent = formatTokens(balance);
+                balanceElement.classList.remove('loading');
+            }
         }
 
         function updateBurnTracker() {
@@ -439,8 +621,17 @@
             // Fetch market cap data
             fetchMarketCap();
             
-            // Refresh market cap every 60 seconds
-            setInterval(fetchMarketCap, 60000);
+            // Create address cards
+            createAddressCards();
+            
+            // Update address balances
+            updateAddressBalances();
+            
+            // Refresh market cap and balances every 60 seconds
+            setInterval(() => {
+                fetchMarketCap();
+                updateAddressBalances();
+            }, 60000);
         }
 
         window.addEventListener('load', updateBurnTracker);
