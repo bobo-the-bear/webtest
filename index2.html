@@ -661,6 +661,16 @@
                         <div class="stat-label">DISTANCE TO TARGET</div>
                         <div class="stat-value">${formatNumber(remaining)}</div>
                     </div>
+                    <div class="stat">
+                        <div class="stat-label">💎 ETH PRICE</div>
+                        <div class="stat-value" style="color: var(--cyan);">${formatPrice(ethPrice)}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">💎 ETH 24H CHANGE</div>
+                        <div class="stat-value" style="color: ${ethChangeColor}">
+                            ${ethChangeSymbol} ${Math.abs(ethChange24h).toFixed(2)}%
+                        </div>
+                    </div>
                 </div>
 
                 <div class="progress-section">
@@ -692,28 +702,6 @@
                     <div class="progress-bar-container" style="margin-top: 1rem;">
                         <div class="progress-bar" style="width: ${pepePercentage}%"></div>
                         <div class="progress-text">${pepePercentage.toFixed(2)}%</div>
-                    </div>
-                </div>
-
-                <div class="progress-section" style="margin-top: 3rem;">
-                    <div class="progress-label">
-                        <span style="color: var(--cyan); font-weight: 700;">💎 ETHEREUM REFERENCE</span>
-                    </div>
-                    <div class="stats-grid" style="margin-top: 1rem; margin-bottom: 0;">
-                        <div class="stat">
-                            <div class="stat-label">ETH PRICE</div>
-                            <div class="stat-value" style="color: var(--cyan);">${formatPrice(ethPrice)}</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-label">ETH 24H CHANGE</div>
-                            <div class="stat-value" style="color: ${ethChangeColor}">
-                                ${ethChangeSymbol} ${Math.abs(ethChange24h).toFixed(2)}%
-                            </div>
-                        </div>
-                        <div class="stat" style="grid-column: 1 / -1;">
-                            <div class="stat-label">ETH MARKET CAP</div>
-                            <div class="stat-value" style="color: var(--cyan);">${formatNumber(ethMarketCap)}</div>
-                        </div>
                     </div>
                 </div>
 
