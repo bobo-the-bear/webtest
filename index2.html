@@ -558,7 +558,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bobo-coin&vs_currencies=usd&include_market_cap=true&include_24hr_change=true';
+        const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bobo-coin,pepe&vs_currencies=usd&include_market_cap=true&include_24hr_change=true';
         const TARGET_MARKET_CAP = 1000000000; // 1 billion
 
         // Create floating particles (fewer on mobile)
@@ -602,15 +602,21 @@
                 
                 const data = await response.json();
                 const boboData = data['bobo-coin'];
+                const pepeData = data['pepe'];
                 
                 if (!boboData) throw new Error('Bobo Coin data not found');
+                if (!pepeData) throw new Error('Pepe data not found');
 
                 const currentMarketCap = boboData.usd_market_cap || 0;
                 const currentPrice = boboData.usd || 0;
                 const change24h = boboData.usd_24h_change || 0;
                 const percentage = Math.min((currentMarketCap / TARGET_MARKET_CAP) * 100, 100);
+                
+                const pepeMarketCap = pepeData.usd_market_cap || 0;
+                const distanceToPepe = pepeMarketCap - currentMarketCap;
+                const pepePercentage = (currentMarketCap / pepeMarketCap) * 100;
 
-                displayData(currentMarketCap, currentPrice, change24h, percentage);
+                displayData(currentMarketCap, currentPrice, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage);
             } catch (error) {
                 document.getElementById('content').innerHTML = `
                     <div class="error">
@@ -622,7 +628,7 @@
             }
         }
 
-        function displayData(marketCap, price, change24h, percentage) {
+        function displayData(marketCap, price, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage) {
             const remaining = TARGET_MARKET_CAP - marketCap;
             const changeColor = change24h >= 0 ? 'var(--green)' : 'var(--red)';
             const changeSymbol = change24h >= 0 ? '▲' : '▼';
@@ -657,6 +663,27 @@
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${percentage}%"></div>
                         <div class="progress-text">${percentage.toFixed(2)}%</div>
+                    </div>
+                </div>
+
+                <div class="progress-section" style="margin-top: 3rem;">
+                    <div class="progress-label">
+                        <span style="color: var(--red); font-weight: 700;">🐸 DISTANCE TO PEPE</span>
+                        <span class="target">PEPE MARKET CAP: ${formatNumber(pepeMarketCap)}</span>
+                    </div>
+                    <div class="stats-grid" style="margin-top: 1rem; margin-bottom: 0;">
+                        <div class="stat">
+                            <div class="stat-label">BOBO IS AT</div>
+                            <div class="stat-value" style="color: var(--red);">${pepePercentage.toFixed(2)}% OF PEPE</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">GAP TO CLOSE</div>
+                            <div class="stat-value" style="color: var(--red);">${formatNumber(distanceToPepe)}</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container" style="margin-top: 1rem;">
+                        <div class="progress-bar" style="width: ${pepePercentage}%"></div>
+                        <div class="progress-text">${pepePercentage.toFixed(2)}%</div>
                     </div>
                 </div>
 
