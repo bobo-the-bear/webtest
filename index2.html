@@ -558,7 +558,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bobo-coin,pepe&vs_currencies=usd&include_market_cap=true&include_24hr_change=true';
+        const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bobo-coin,pepe,ethereum&vs_currencies=usd&include_market_cap=true&include_24hr_change=true';
         const TARGET_MARKET_CAP = 1000000000; // 1 billion
 
         // Create floating particles (fewer on mobile)
@@ -603,9 +603,11 @@
                 const data = await response.json();
                 const boboData = data['bobo-coin'];
                 const pepeData = data['pepe'];
+                const ethData = data['ethereum'];
                 
                 if (!boboData) throw new Error('Bobo Coin data not found');
                 if (!pepeData) throw new Error('Pepe data not found');
+                if (!ethData) throw new Error('Ethereum data not found');
 
                 const currentMarketCap = boboData.usd_market_cap || 0;
                 const currentPrice = boboData.usd || 0;
@@ -615,8 +617,12 @@
                 const pepeMarketCap = pepeData.usd_market_cap || 0;
                 const distanceToPepe = pepeMarketCap - currentMarketCap;
                 const pepePercentage = (currentMarketCap / pepeMarketCap) * 100;
+                
+                const ethPrice = ethData.usd || 0;
+                const ethChange24h = ethData.usd_24h_change || 0;
+                const ethMarketCap = ethData.usd_market_cap || 0;
 
-                displayData(currentMarketCap, currentPrice, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage);
+                displayData(currentMarketCap, currentPrice, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage, ethPrice, ethChange24h, ethMarketCap);
             } catch (error) {
                 document.getElementById('content').innerHTML = `
                     <div class="error">
@@ -628,10 +634,12 @@
             }
         }
 
-        function displayData(marketCap, price, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage) {
+        function displayData(marketCap, price, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage, ethPrice, ethChange24h, ethMarketCap) {
             const remaining = TARGET_MARKET_CAP - marketCap;
             const changeColor = change24h >= 0 ? 'var(--green)' : 'var(--red)';
             const changeSymbol = change24h >= 0 ? '▲' : '▼';
+            const ethChangeColor = ethChange24h >= 0 ? 'var(--green)' : 'var(--red)';
+            const ethChangeSymbol = ethChange24h >= 0 ? '▲' : '▼';
 
             document.getElementById('content').innerHTML = `
                 <div class="stats-grid">
@@ -684,6 +692,28 @@
                     <div class="progress-bar-container" style="margin-top: 1rem;">
                         <div class="progress-bar" style="width: ${pepePercentage}%"></div>
                         <div class="progress-text">${pepePercentage.toFixed(2)}%</div>
+                    </div>
+                </div>
+
+                <div class="progress-section" style="margin-top: 3rem;">
+                    <div class="progress-label">
+                        <span style="color: var(--cyan); font-weight: 700;">💎 ETHEREUM REFERENCE</span>
+                    </div>
+                    <div class="stats-grid" style="margin-top: 1rem; margin-bottom: 0;">
+                        <div class="stat">
+                            <div class="stat-label">ETH PRICE</div>
+                            <div class="stat-value" style="color: var(--cyan);">${formatPrice(ethPrice)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">ETH 24H CHANGE</div>
+                            <div class="stat-value" style="color: ${ethChangeColor}">
+                                ${ethChangeSymbol} ${Math.abs(ethChange24h).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div class="stat" style="grid-column: 1 / -1;">
+                            <div class="stat-label">ETH MARKET CAP</div>
+                            <div class="stat-value" style="color: var(--cyan);">${formatNumber(ethMarketCap)}</div>
+                        </div>
                     </div>
                 </div>
 
