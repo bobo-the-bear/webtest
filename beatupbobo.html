@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beat Up Bobo</title>
+    <title>Beat Up Bear</title>
     <style>
         body {
             margin: 0;
@@ -415,6 +415,18 @@
         const higherAudio = new Audio('higher_wzc5ZFu.mp3');
         const ayeAudio = new Audio('aye-67.mp3');
         const killingSpreeAudio = new Audio('halo-reach-killing-spree.mp3');
+        const cellThemeAudio = new Audio('cell-theme.mp3');
+        
+        // Start Cell theme music on page load
+        cellThemeAudio.loop = true;
+        cellThemeAudio.play().catch(e => {
+            // If autoplay is blocked, play on first user interaction
+            document.addEventListener('click', () => {
+                if (hitCount === 0) {
+                    cellThemeAudio.play().catch(e => console.log('Cell theme play failed:', e));
+                }
+            }, { once: true });
+        });
 
         // Initialize with base image
         updateBearImage();
@@ -537,6 +549,12 @@
 
             // Play laser sound and update bear (delayed to sync with candle hit)
             setTimeout(() => {
+                // Stop Cell theme music after first hit
+                if (hitCount === 0) {
+                    cellThemeAudio.pause();
+                    cellThemeAudio.currentTime = 0;
+                }
+                
                 // Play laser sound
                 audio.currentTime = 0;
                 audio.play().catch(e => console.log('Audio play failed:', e));
