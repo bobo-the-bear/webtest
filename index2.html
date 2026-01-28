@@ -3,758 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOBO_COIN.EXE // BOBO_BILLIONS_TRACKER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Beat Up Bear</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --red: #ff0033;
-            --red-glow: rgba(255, 0, 51, 0.6);
-            --green: #4fe930;
-            --cyan: #ffffff;
-            --bg: #000000;
-            --grid: #0a0a0a;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--green);
-            font-family: 'Share Tech Mono', monospace;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            position: relative;
-        }
-
-        /* Animated grid background */
-        .grid-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.3;
-            animation: gridScroll 20s linear infinite;
-            z-index: 0;
-        }
-
-        @keyframes gridScroll {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(50px); }
-        }
-
-        /* Scanline effect */
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                transparent 50%,
-                rgba(0, 255, 65, 0.02) 51%,
-                transparent 52%
-            );
-            background-size: 100% 4px;
-            animation: scan 8s linear infinite;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        @keyframes scan {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100vh); }
-        }
-
-        /* Glitch effect */
-        @keyframes glitch {
-            0%, 90%, 100% { transform: translate(0); }
-            92% { transform: translate(-2px, 2px); }
-            94% { transform: translate(2px, -2px); }
-            96% { transform: translate(-2px, -2px); }
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
         }
 
         .container {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-
-        .terminal-window {
-            background: rgba(0, 0, 0, 0.85);
-            border: 2px solid var(--red);
-            box-shadow: 
-                0 0 20px var(--red-glow),
-                inset 0 0 40px rgba(255, 0, 51, 0.1);
-            padding: 2rem;
-            max-width: 900px;
-            width: 100%;
-            position: relative;
-            animation: fadeIn 1s ease-out;
-            margin: 1rem 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--red);
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--red);
-            box-shadow: 0 0 10px var(--red-glow);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            max-width: 400px;
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 0 20px var(--red-glow));
-            animation: glitch 8s infinite;
-        }
-
-        .title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(1.5rem, 8vw, 2.5rem);
-            font-weight: 900;
-            color: var(--red);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 
-                0 0 10px var(--red-glow),
-                0 0 20px var(--red-glow);
-            margin-bottom: 0.5rem;
-            animation: glitch 5s infinite;
-            word-break: break-word;
-        }
-
-        .subtitle {
-            color: var(--cyan);
-            font-size: clamp(0.7rem, 2.5vw, 0.9rem);
-            letter-spacing: 2px;
-            opacity: 0.8;
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat {
-            background: rgba(255, 0, 51, 0.05);
-            border: 1px solid var(--red);
-            padding: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 51, 0.1), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .stat-label {
-            font-size: clamp(0.65rem, 2vw, 0.75rem);
-            color: var(--cyan);
-            opacity: 0.7;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(1.1rem, 4vw, 1.5rem);
-            font-weight: 700;
-            color: var(--green);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            word-break: break-word;
-        }
-
-        .progress-section {
-            margin-top: 2rem;
-        }
-
-        .progress-label {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
-        }
-
-        .target {
-            color: var(--cyan);
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--red);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                inset 0 0 20px rgba(255, 0, 51, 0.3),
-                0 0 20px var(--red-glow);
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, 
-                var(--red) 0%, 
-                #ff3355 50%, 
-                var(--red) 100%);
-            background-size: 200% 100%;
-            animation: progressShine 2s linear infinite;
-            transition: width 1s ease-out;
-            position: relative;
-            box-shadow: 
-                0 0 20px var(--red-glow),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        @keyframes progressShine {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.3), 
-                transparent);
-            animation: slideShine 1.5s infinite;
-        }
-
-        @keyframes slideShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Orbitron', monospace;
-            font-weight: 700;
-            font-size: clamp(0.9rem, 3vw, 1.2rem);
-            color: #fff;
-            text-shadow: 
-                0 0 10px rgba(0, 0, 0, 0.8),
-                0 2px 4px rgba(0, 0, 0, 0.6);
-            z-index: 10;
-        }
-
-        .status {
-            margin-top: 2rem;
             text-align: center;
-            font-size: clamp(0.7rem, 2vw, 0.85rem);
-            color: var(--green);
-            opacity: 0.6;
-            letter-spacing: 1px;
-            line-height: 1.5;
         }
 
-        .loading {
-            text-align: center;
-            color: var(--cyan);
-            font-size: clamp(0.9rem, 3vw, 1.2rem);
-            animation: blink 1s infinite;
-            padding: 2rem 1rem;
-        }
-
-        @keyframes blink {
-            0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.3; }
-        }
-
-        .error {
-            color: var(--red);
-            text-align: center;
-            font-size: clamp(0.85rem, 2.5vw, 1rem);
-            padding: 2rem 1rem;
-            line-height: 1.6;
-        }
-
-        /* Particles effect */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--red);
-            box-shadow: 0 0 4px var(--red-glow);
-            opacity: 0;
-            animation: float 5s infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) translateX(100px);
-                opacity: 0;
-            }
-        }
-
-        .buy-button {
-            display: block;
-            width: 100%;
-            margin-top: 2rem;
-            padding: 1.2rem;
-            background: linear-gradient(135deg, var(--red), #ff3355);
-            border: 2px solid var(--red);
-            color: #ffffff;
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(1rem, 3.5vw, 1.3rem);
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-decoration: none;
-            text-align: center;
+        .bear-container {
+            position: relative;
+            display: inline-block;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 
-                0 0 30px var(--red-glow),
-                inset 0 0 20px rgba(255, 255, 255, 0.1);
-            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s;
         }
 
-        .buy-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        .bear-container:active {
+            transform: scale(0.95);
         }
 
-        .buy-button:hover,
-        .buy-button:active {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 0 50px var(--red-glow),
-                0 10px 30px rgba(255, 0, 51, 0.4),
-                inset 0 0 30px rgba(255, 255, 255, 0.2);
-        }
-
-        .buy-button:hover::before,
-        .buy-button:active::before {
+        .bear-image {
             width: 400px;
             height: 400px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
         }
 
-        .buy-button span {
-            position: relative;
-            z-index: 1;
+        .bat {
+            position: absolute;
+            width: 300px;
+            height: auto;
+            top: 50%;
+            left: -350px;
+            transform-origin: bottom right;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
         }
 
-        /* Mobile-specific adjustments */
-        @media screen and (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            .terminal-window {
-                padding: 1.5rem;
-                border-width: 1px;
-            }
-
-            .logo {
-                max-width: 280px;
-            }
-
-            .title {
-                letter-spacing: 2px;
-            }
-
-            .subtitle {
-                letter-spacing: 1px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-
-            .progress-label {
-                font-size: 0.75rem;
-            }
-
-            .progress-bar-container {
-                height: 35px;
-            }
-
-            .buy-button {
-                padding: 1rem;
-                letter-spacing: 2px;
-            }
-
-            .status {
-                font-size: 0.7rem;
-            }
-
-            /* Reduce particle count on mobile */
-            .particle:nth-child(n+16) {
-                display: none;
-            }
-
-            /* Disable some animations on mobile for performance */
-            @media (prefers-reduced-motion: reduce) {
-                .scanline,
-                .grid-bg,
-                .particle {
-                    animation: none;
-                }
-            }
+        .hit-counter {
+            margin-top: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        @media screen and (max-width: 480px) {
-            .terminal-window {
-                padding: 1rem;
-            }
+        .instructions {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
 
-            .terminal-header {
-                margin-bottom: 1rem;
-            }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
 
-            .logo-container {
-                padding: 0.5rem 0;
-                margin-bottom: 1rem;
-            }
+        .shake {
+            animation: shake 0.3s;
+        }
 
-            .logo {
-                max-width: 220px;
+        @keyframes batSwing {
+            0% {
+                left: -350px;
+                top: 50%;
+                transform: rotate(-45deg);
+                opacity: 0;
             }
-
-            .dot {
-                width: 10px;
-                height: 10px;
+            20% {
+                opacity: 1;
             }
-
-            .stats-grid {
-                gap: 0.5rem;
+            50% {
+                left: 50%;
+                top: 30%;
+                transform: rotate(45deg) translateX(-50%);
             }
-
-            .stat {
-                padding: 0.75rem;
+            70% {
+                left: 50%;
+                top: 30%;
+                transform: rotate(45deg) translateX(-50%);
             }
-
-            .progress-section {
-                margin-top: 1.5rem;
+            100% {
+                left: 120%;
+                top: 20%;
+                transform: rotate(90deg);
+                opacity: 0;
             }
         }
 
-        /* Landscape mobile */
-        @media screen and (max-height: 500px) and (orientation: landscape) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            .terminal-window {
-                padding: 1rem;
-                margin: 0.5rem 0;
-            }
-
-            .title {
-                margin-bottom: 0.25rem;
-            }
-
-            .subtitle {
-                margin-bottom: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .progress-section {
-                margin-top: 1rem;
-            }
-
-            .buy-button {
-                margin-top: 1rem;
-                padding: 0.75rem;
-            }
+        .bat-swing {
+            animation: batSwing 0.6s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="grid-bg"></div>
-    <div class="scanline"></div>
-    <div class="particles" id="particles"></div>
-
     <div class="container">
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-            
-            <div class="logo-container">
-                <img src="BOBO_CIRCLE_LOGO.png" alt="BOBO Logo" class="logo">
-            </div>
-            
-            <h1 class="title">BOBO COIN</h1>
-            <div class="subtitle">// BOBO BILLIONS TRACKER v2.0.1</div>
-
-            <div id="content">
-                <div class="loading">INITIALIZING CONNECTION >>> FETCHING MARKET DATA...</div>
-            </div>
+        <div class="bear-container" id="bearContainer">
+            <img id="bat" class="bat" src="baseball-bat-png-clipart-3.png" alt="Baseball Bat">
+            <img id="bearImage" class="bear-image" src="" alt="Bear">
         </div>
+        <div class="hit-counter" id="hitCounter">Hits: 0</div>
+        <div class="instructions">Click the bear to hit him! He'll heal after 30 seconds.</div>
     </div>
 
     <script>
-        const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bobo-coin,pepe,ethereum&vs_currencies=usd&include_market_cap=true&include_24hr_change=true';
-        const TARGET_MARKET_CAP = 1000000000; // 1 billion
+        const bearStates = [
+            'b1_base.png',
+            'b13.png',
+            'b132.png',
+            'b134.png',
+            'b135.png',
+            'b136.png',
+            'b137.png',
+            'b138.png',
+            'b139.png'
+        ];
 
-        // Create floating particles (fewer on mobile)
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const isMobile = window.innerWidth <= 768;
-            const particleCount = isMobile ? 15 : 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                particle.style.animationDuration = (3 + Math.random() * 4) + 's';
-                container.appendChild(particle);
+        let currentState = 0;
+        let hitCount = 0;
+        let healTimer = null;
+
+        const bearImage = document.getElementById('bearImage');
+        const bearContainer = document.getElementById('bearContainer');
+        const hitCounter = document.getElementById('hitCounter');
+        const bat = document.getElementById('bat');
+
+        // Initialize with base image
+        updateBearImage();
+
+        function updateBearImage() {
+            bearImage.src = bearStates[currentState];
+        }
+
+        function resetHealTimer() {
+            // Clear existing timer
+            if (healTimer) {
+                clearTimeout(healTimer);
             }
+
+            // Set new timer for 30 seconds
+            healTimer = setTimeout(() => {
+                currentState = 0;
+                hitCount = 0;
+                updateBearImage();
+                updateHitCounter();
+            }, 30000);
         }
 
-        function formatNumber(num) {
-            if (num >= 1000000000) {
-                return '$' + (num / 1000000000).toFixed(2) + 'B';
-            } else if (num >= 1000000) {
-                return '$' + (num / 1000000).toFixed(2) + 'M';
-            } else if (num >= 1000) {
-                return '$' + (num / 1000).toFixed(2) + 'K';
-            }
-            return '$' + num.toFixed(2);
+        function updateHitCounter() {
+            hitCounter.textContent = `Hits: ${hitCount}`;
         }
 
-        function formatPrice(price) {
-            if (price < 0.01) {
-                return '$' + price.toFixed(9);
-            }
-            return '$' + price.toFixed(4);
-        }
+        bearContainer.addEventListener('click', () => {
+            // Trigger bat swing
+            bat.classList.remove('bat-swing');
+            void bat.offsetWidth; // Force reflow to restart animation
+            bat.classList.add('bat-swing');
 
-        async function fetchData() {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.json();
-                const boboData = data['bobo-coin'];
-                const pepeData = data['pepe'];
-                const ethData = data['ethereum'];
-                
-                if (!boboData) throw new Error('Bobo Coin data not found');
-                if (!pepeData) throw new Error('Pepe data not found');
-                if (!ethData) throw new Error('Ethereum data not found');
+            // Add shake animation to bear (delayed to sync with bat hit)
+            setTimeout(() => {
+                bearContainer.classList.add('shake');
+                setTimeout(() => {
+                    bearContainer.classList.remove('shake');
+                }, 300);
 
-                const currentMarketCap = boboData.usd_market_cap || 0;
-                const currentPrice = boboData.usd || 0;
-                const change24h = boboData.usd_24h_change || 0;
-                const percentage = Math.min((currentMarketCap / TARGET_MARKET_CAP) * 100, 100);
-                
-                const pepeMarketCap = pepeData.usd_market_cap || 0;
-                const distanceToPepe = pepeMarketCap - currentMarketCap;
-                const pepePercentage = (currentMarketCap / pepeMarketCap) * 100;
-                
-                const ethPrice = ethData.usd || 0;
-                const ethChange24h = ethData.usd_24h_change || 0;
-                const ethMarketCap = ethData.usd_market_cap || 0;
+                // Update bear state when bat makes contact
+                if (currentState < bearStates.length - 1) {
+                    currentState++;
+                } else {
+                    currentState = bearStates.length - 1;
+                }
 
-                displayData(currentMarketCap, currentPrice, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage, ethPrice, ethChange24h, ethMarketCap);
-            } catch (error) {
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        ERROR: CONNECTION FAILED<br>
-                        ${error.message}<br>
-                        <span style="font-size: 0.8rem; opacity: 0.6;">RETRYING IN 30s...</span>
-                    </div>
-                `;
-            }
-        }
+                hitCount++;
+                updateBearImage();
+                updateHitCounter();
+                resetHealTimer();
+            }, 300); // Delay to sync with bat hitting
+        });
 
-        function displayData(marketCap, price, change24h, percentage, pepeMarketCap, distanceToPepe, pepePercentage, ethPrice, ethChange24h, ethMarketCap) {
-            const remaining = TARGET_MARKET_CAP - marketCap;
-            const changeColor = change24h >= 0 ? 'var(--green)' : 'var(--red)';
-            const changeSymbol = change24h >= 0 ? '▲' : '▼';
-            const ethChangeColor = ethChange24h >= 0 ? 'var(--green)' : 'var(--red)';
-            const ethChangeSymbol = ethChange24h >= 0 ? '▲' : '▼';
-
-            document.getElementById('content').innerHTML = `
-                <div class="stats-grid">
-                    <div class="stat">
-                        <div class="stat-label">CURRENT PRICE</div>
-                        <div class="stat-value">${formatPrice(price)}</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">24H CHANGE</div>
-                        <div class="stat-value" style="color: ${changeColor}">
-                            ${changeSymbol} ${Math.abs(change24h).toFixed(2)}%
-                        </div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">CURRENT MARKET CAP</div>
-                        <div class="stat-value">${formatNumber(marketCap)}</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">DISTANCE TO TARGET</div>
-                        <div class="stat-value">${formatNumber(remaining)}</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">💎 ETH PRICE</div>
-                        <div class="stat-value" style="color: var(--cyan);">${formatPrice(ethPrice)}</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">💎 ETH 24H CHANGE</div>
-                        <div class="stat-value" style="color: ${ethChangeColor}">
-                            ${ethChangeSymbol} ${Math.abs(ethChange24h).toFixed(2)}%
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-label">
-                        <span>PROGRESS TO $1B MARKET CAP</span>
-                        <span class="target">TARGET: $1,000,000,000</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${percentage}%"></div>
-                        <div class="progress-text">${percentage.toFixed(2)}%</div>
-                    </div>
-                </div>
-
-                <div class="progress-section" style="margin-top: 3rem;">
-                    <div class="progress-label">
-                        <span style="color: var(--red); font-weight: 700;">🐸 DISTANCE TO PEPE</span>
-                        <span class="target">PEPE MARKET CAP: ${formatNumber(pepeMarketCap)}</span>
-                    </div>
-                    <div class="stats-grid" style="margin-top: 1rem; margin-bottom: 0;">
-                        <div class="stat">
-                            <div class="stat-label">BOBO IS AT</div>
-                            <div class="stat-value" style="color: var(--red);">${pepePercentage.toFixed(2)}% OF PEPE</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-label">GAP TO CLOSE</div>
-                            <div class="stat-value" style="color: var(--red);">${formatNumber(distanceToPepe)}</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container" style="margin-top: 1rem;">
-                        <div class="progress-bar" style="width: ${pepePercentage}%"></div>
-                        <div class="progress-text">${pepePercentage.toFixed(2)}%</div>
-                    </div>
-                </div>
-
-                <div class="status">
-                    LIVE DATA // AUTO-REFRESH: 30s<br>POWERED BY COINGECKO API
-                </div>
-
-                <a href="https://app.uniswap.org/swap?outputCurrency=0xb90b2a35c65dbc466b04240097ca756ad2005295" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="buy-button">
-                    <span>▶ BUY BOBO COIN</span>
-                </a>
-            `;
-        }
-
-        // Initialize
-        createParticles();
-        fetchData();
-        setInterval(fetchData, 30000); // Refresh every 30 seconds
+        // Start initial heal timer
+        resetHealTimer();
     </script>
 </body>
 </html>
