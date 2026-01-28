@@ -647,9 +647,9 @@
                     cellThemeAudio.play().catch(e => console.log('Cell theme play failed:', e));
                 }
                 
-                // Play laser sound
-                audio.currentTime = 0;
-                audio.play().catch(e => console.log('Audio play failed:', e));
+                // Play laser sound (create new instance for overlap)
+                const laserSound = new Audio('hyper-lazer-gun-roblox.mp3');
+                laserSound.play().catch(e => console.log('Audio play failed:', e));
 
                 bearContainer.classList.add('shake');
                 setTimeout(() => {
