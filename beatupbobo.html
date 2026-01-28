@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat Up Bobo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #00ff00, #00dd00);
+            transition: height 0.3s ease-out;
+            z-index: 0;
+        }
+
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .win-screen.active {
+            display: flex;
+        }
+
+        .win-text {
+            font-size: 120px;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+            z-index: 1001;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            animation: confettiFall 3s linear infinite;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                top: -10%;
+                opacity: 1;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+                transform: rotate(720deg);
+            }
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2) rotate(180deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(0) rotate(360deg) translateY(-1000px);
+                opacity: 0;
+            }
+        }
+
+        .explode {
+            animation: explode 1s ease-out forwards;
+        }
+
+        .arrow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.7;
+            will-change: transform;
+        }
+
+        .red-arrow {
+            color: #ff0000;
+            animation: fallDown 4s linear infinite;
+        }
+
+        .green-arrow {
+            color: #00ff00;
+            animation: riseUp 4s linear infinite;
+            filter: drop-shadow(0 0 5px #00ff00);
+        }
+
+        @keyframes fallDown {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes riseUp {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .bear-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .bear-container:active {
+            transform: scale(0.95);
+        }
+
+        .bear-image {
+            width: 400px;
+            height: 400px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+        }
+
+        .bear-image.flash-green {
+            animation: bearFlash 0.3s ease-out;
+        }
+
+        @keyframes bearFlash {
+            0% {
+                filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)) brightness(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(0, 255, 0, 1)) brightness(3) hue-rotate(90deg);
+            }
+            100% {
+                filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)) brightness(1);
+            }
+        }
+
+        .candle {
+            position: absolute;
+            width: 100px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        @keyframes candleFromTop {
+            0% {
+                left: 50%;
+                top: -200px;
+                transform: translateX(-50%) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                left: 50%;
+                top: 20%;
+                transform: translateX(-50%) rotate(180deg);
+            }
+            100% {
+                left: 50%;
+                top: 100%;
+                transform: translateX(-50%) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromLeft {
+            0% {
+                left: -200px;
+                top: 50%;
+                transform: translateY(-50%) rotate(-90deg);
+                opacity: 1;
+            }
+            50% {
+                left: 40%;
+                top: 30%;
+                transform: translateY(-50%) rotate(90deg);
+            }
+            100% {
+                left: 120%;
+                top: 50%;
+                transform: translateY(-50%) rotate(270deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromRight {
+            0% {
+                left: 120%;
+                top: 50%;
+                transform: translateY(-50%) rotate(90deg);
+                opacity: 1;
+            }
+            50% {
+                left: 60%;
+                top: 30%;
+                transform: translateY(-50%) rotate(-90deg);
+            }
+            100% {
+                left: -200px;
+                top: 50%;
+                transform: translateY(-50%) rotate(-270deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromTopLeft {
+            0% {
+                left: -200px;
+                top: -200px;
+                transform: rotate(-45deg);
+                opacity: 1;
+            }
+            50% {
+                left: 40%;
+                top: 20%;
+                transform: rotate(135deg);
+            }
+            100% {
+                left: 120%;
+                top: 120%;
+                transform: rotate(315deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromTopRight {
+            0% {
+                left: 120%;
+                top: -200px;
+                transform: rotate(45deg);
+                opacity: 1;
+            }
+            50% {
+                left: 60%;
+                top: 20%;
+                transform: rotate(-135deg);
+            }
+            100% {
+                left: -200px;
+                top: 120%;
+                transform: rotate(-315deg);
+                opacity: 0;
+            }
+        }
+
+        .candle-animate-top {
+            animation: candleFromTop 0.6s ease-out;
+        }
+
+        .candle-animate-left {
+            animation: candleFromLeft 0.6s ease-out;
+        }
+
+        .candle-animate-right {
+            animation: candleFromRight 0.6s ease-out;
+        }
+
+        .candle-animate-topleft {
+            animation: candleFromTopLeft 0.6s ease-out;
+        }
+
+        .candle-animate-topright {
+            animation: candleFromTopRight 0.6s ease-out;
+        }
+
+        .hit-counter {
+            margin-top: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructions {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        .shake {
+            animation: shake 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="arrow-container" id="arrowContainer"></div>
+    <div class="win-screen" id="winScreen">
+        <div class="win-text">YOU WIN!</div>
+    </div>
+    <div class="container">
+        <div class="bear-container" id="bearContainer">
+            <img id="candle" class="candle" src="greencandle.png" alt="Green Candle">
+            <img id="bearImage" class="bear-image" src="" alt="Bear">
+        </div>
+        <div class="hit-counter" id="hitCounter">Hits: 0</div>
+        <div class="instructions">Click the bear to hit him! He'll heal after 30 seconds.</div>
+    </div>
+
+    <script>
+        const bearStates = [
+            'b1_base.png',
+            'b13.png',
+            'b132.png',
+            'b134.png',
+            'b135.png',
+            'b136.png',
+            'b137.png',
+            'b138.png',
+            'b139.png'
+        ];
+
+        const candleAnimations = [
+            'candle-animate-top',
+            'candle-animate-left',
+            'candle-animate-right',
+            'candle-animate-topleft',
+            'candle-animate-topright'
+        ];
+
+        let currentState = 0;
+        let hitCount = 0;
+        let healTimer = null;
+        let isGreenMode = false;
+        let hasWon = false;
+
+        const bearImage = document.getElementById('bearImage');
+        const bearContainer = document.getElementById('bearContainer');
+        const hitCounter = document.getElementById('hitCounter');
+        const candle = document.getElementById('candle');
+        const arrowContainer = document.getElementById('arrowContainer');
+        const progressBar = document.getElementById('progressBar');
+        const winScreen = document.getElementById('winScreen');
+        const audio = new Audio('hyper-lazer-gun-roblox.mp3');
+        const winAudio = new Audio('epic_3Hvww3C.mp3');
+        const pumpAudio = new Audio('pump-it.mp3');
+        const higherAudio = new Audio('higher_wzc5ZFu.mp3');
+        const ayeAudio = new Audio('aye-67.mp3');
+        const killingSpreeAudio = new Audio('halo-reach-killing-spree.mp3');
+
+        // Initialize with base image
+        updateBearImage();
+
+        function createArrows() {
+            // Start with no arrows - only create when green mode activates
+        }
+
+        function addGreenArrows() {
+            // Add green arrows
+            const arrowCount = 20;
+            
+            for (let i = 0; i < arrowCount; i++) {
+                const arrow = document.createElement('div');
+                arrow.className = 'arrow green-arrow';
+                arrow.style.left = `${(i * 5) + Math.random() * 5}%`;
+                arrow.style.animationDelay = `${Math.random() * 4}s`;
+                arrow.style.top = '0';
+                arrow.textContent = '↑';
+                
+                arrowContainer.appendChild(arrow);
+            }
+        }
+
+        function switchToGreenMode() {
+            if (!isGreenMode) {
+                isGreenMode = true;
+                addGreenArrows();
+            }
+        }
+
+        function switchToRedMode() {
+            isGreenMode = false;
+            // Remove all arrows
+            arrowContainer.innerHTML = '';
+        }
+
+        // Don't initialize with any arrows
+
+        function updateBearImage() {
+            bearImage.src = bearStates[currentState];
+        }
+
+        function resetHealTimer() {
+            // Clear existing timer
+            if (healTimer) {
+                clearTimeout(healTimer);
+            }
+
+            // Set new timer for 30 seconds
+            healTimer = setTimeout(() => {
+                currentState = 0;
+                hitCount = 0;
+                updateBearImage();
+                updateHitCounter();
+                switchToRedMode();
+            }, 30000);
+        }
+
+        function updateHitCounter() {
+            hitCounter.textContent = `Hits: ${hitCount}`;
+            
+            // Update progress bar
+            const progress = Math.min((hitCount / 100) * 100, 100);
+            progressBar.style.height = `${progress}%`;
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = `${Math.random() * 2}s`;
+                    confetti.style.animationDuration = `${2 + Math.random() * 2}s`;
+                    winScreen.appendChild(confetti);
+                }, i * 20);
+            }
+        }
+
+        function triggerWin() {
+            hasWon = true;
+            
+            // Make bear explode
+            bearContainer.classList.add('explode');
+            
+            // Play win sound
+            winAudio.play().catch(e => console.log('Win audio play failed:', e));
+            
+            // Show win screen after explosion
+            setTimeout(() => {
+                winScreen.classList.add('active');
+                createConfetti();
+            }, 1000);
+        }
+
+        bearContainer.addEventListener('click', () => {
+            if (hasWon) return; // Don't allow clicks after winning
+
+            // Switch to green mode
+            switchToGreenMode();
+
+            // Trigger green flash on bear
+            bearImage.classList.remove('flash-green');
+            void bearImage.offsetWidth; // Force reflow
+            bearImage.classList.add('flash-green');
+
+            // Select random candle animation
+            const randomAnimation = candleAnimations[Math.floor(Math.random() * candleAnimations.length)];
+            
+            // Remove all animation classes
+            candleAnimations.forEach(anim => candle.classList.remove(anim));
+            
+            // Trigger candle animation
+            void candle.offsetWidth; // Force reflow to restart animation
+            candle.classList.add(randomAnimation);
+
+            // Play laser sound and update bear (delayed to sync with candle hit)
+            setTimeout(() => {
+                // Play laser sound
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log('Audio play failed:', e));
+
+                bearContainer.classList.add('shake');
+                setTimeout(() => {
+                    bearContainer.classList.remove('shake');
+                }, 300);
+
+                // Randomly select a damaged state (1-8, excluding base state 0)
+                currentState = Math.floor(Math.random() * (bearStates.length - 1)) + 1;
+
+                hitCount++;
+                updateBearImage();
+                updateHitCounter();
+                
+                // Play pump-it sound at 25 hits
+                if (hitCount === 25) {
+                    pumpAudio.play().catch(e => console.log('Pump audio play failed:', e));
+                }
+                
+                // Play higher sound at 50 hits
+                if (hitCount === 50) {
+                    higherAudio.play().catch(e => console.log('Higher audio play failed:', e));
+                }
+                
+                // Play aye sound at 67 hits
+                if (hitCount === 67) {
+                    ayeAudio.play().catch(e => console.log('Aye audio play failed:', e));
+                }
+                
+                // Play killing spree sound at 85 hits
+                if (hitCount === 85) {
+                    killingSpreeAudio.play().catch(e => console.log('Killing spree audio play failed:', e));
+                }
+                
+                // Check for win condition
+                if (hitCount >= 100) {
+                    triggerWin();
+                } else {
+                    resetHealTimer();
+                }
+            }, 300); // Delay to sync with candle hitting
+        });
+
+        // Start initial heal timer
+        resetHealTimer();
+    </script>
+</body>
+</html>
