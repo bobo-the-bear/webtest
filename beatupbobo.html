@@ -372,7 +372,7 @@
             <img id="bearImage" class="bear-image" src="" alt="Bear">
         </div>
         <div class="hit-counter" id="hitCounter">Hits: 0</div>
-        <div class="instructions">Click the bear to liquidate him! He'll heal after 30 seconds.</div>
+        <div class="instructions">Click the bear to hit him! He'll heal after 30 seconds.</div>
     </div>
 
     <script>
@@ -418,7 +418,7 @@
         const cellThemeAudio = new Audio('cell-theme.mp3');
         
         // Configure Cell theme music (will play from first hit to hit 25)
-        cellThemeAudio.loop = true;
+        cellThemeAudio.loop = false; // Play only once, don't loop
         cellThemeAudio.volume = 0.7;
 
         // Initialize with base image
