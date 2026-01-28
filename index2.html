@@ -24,38 +24,9 @@
             left: 0;
             width: 100%;
             height: 0%;
-            background: #000000;
+            background: linear-gradient(to top, #00ff00, #00dd00);
             transition: height 0.3s ease-out;
             z-index: 0;
-            border-top: 2px solid #00ff00;
-        }
-
-        .chart-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .chart-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .chart-path {
-            fill: none;
-            stroke: #00ff00;
-            stroke-width: 3;
-            filter: drop-shadow(0 0 10px #00ff00);
-        }
-
-        .chart-fill {
-            fill: url(#chartGradient);
-            opacity: 0.3;
         }
 
         .win-screen {
@@ -440,6 +411,10 @@
         const winScreen = document.getElementById('winScreen');
         const audio = new Audio('hyper-lazer-gun-roblox.mp3');
         const winAudio = new Audio('epic_3Hvww3C.mp3');
+        const pumpAudio = new Audio('pump-it.mp3');
+        const higherAudio = new Audio('higher_wzc5ZFu.mp3');
+        const ayeAudio = new Audio('aye-67.mp3');
+        const killingSpreeAudio = new Audio('halo-reach-killing-spree.mp3');
 
         // Initialize with base image
         updateBearImage();
@@ -525,86 +500,9 @@
         function updateHitCounter() {
             hitCounter.textContent = `Hits: ${hitCount}`;
             
-            // Update progress bar and chart
+            // Update progress bar
             const progress = Math.min((hitCount / 100) * 100, 100);
             progressBar.style.height = `${progress}%`;
-            
-            // Update linear chart
-            updateLinearChart(progress);
-        }
-
-        function updateLinearChart(progress) {
-            let chart = progressBar.querySelector('.chart-container');
-            if (!chart) {
-                chart = document.createElement('div');
-                chart.className = 'chart-container';
-                progressBar.appendChild(chart);
-            }
-            
-            // Create SVG for the line chart
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.createElementNS(svgNS, "svg");
-            svg.setAttribute("class", "chart-line");
-            svg.setAttribute("viewBox", "0 0 100 100");
-            svg.setAttribute("preserveAspectRatio", "none");
-            
-            // Create gradient for fill
-            const defs = document.createElementNS(svgNS, "defs");
-            const gradient = document.createElementNS(svgNS, "linearGradient");
-            gradient.setAttribute("id", "chartGradient");
-            gradient.setAttribute("x1", "0%");
-            gradient.setAttribute("y1", "0%");
-            gradient.setAttribute("x2", "0%");
-            gradient.setAttribute("y2", "100%");
-            
-            const stop1 = document.createElementNS(svgNS, "stop");
-            stop1.setAttribute("offset", "0%");
-            stop1.setAttribute("style", "stop-color:#00ff00;stop-opacity:0.5");
-            
-            const stop2 = document.createElementNS(svgNS, "stop");
-            stop2.setAttribute("offset", "100%");
-            stop2.setAttribute("style", "stop-color:#00ff00;stop-opacity:0");
-            
-            gradient.appendChild(stop1);
-            gradient.appendChild(stop2);
-            defs.appendChild(gradient);
-            svg.appendChild(defs);
-            
-            // Generate path data - rising line from left to right
-            const points = 50; // Number of points in the line
-            let pathData = 'M 0 100 '; // Start at bottom left
-            let fillPathData = 'M 0 100 '; // For the filled area
-            
-            for (let i = 0; i <= points; i++) {
-                const x = (i / points) * 100;
-                // Calculate y based on progress - rises from bottom left to top right
-                const baseY = 100 - (progress * (i / points));
-                // Add some variation for realistic stock chart look
-                const variation = Math.sin(i * 0.5) * 3 * (progress / 100);
-                const y = Math.max(0, Math.min(100, baseY + variation));
-                
-                pathData += `L ${x} ${y} `;
-                fillPathData += `L ${x} ${y} `;
-            }
-            
-            // Close the fill path
-            fillPathData += 'L 100 100 Z';
-            
-            // Create the fill area
-            const fillPath = document.createElementNS(svgNS, "path");
-            fillPath.setAttribute("class", "chart-fill");
-            fillPath.setAttribute("d", fillPathData);
-            svg.appendChild(fillPath);
-            
-            // Create the line
-            const path = document.createElementNS(svgNS, "path");
-            path.setAttribute("class", "chart-path");
-            path.setAttribute("d", pathData);
-            svg.appendChild(path);
-            
-            // Replace old chart with new one
-            chart.innerHTML = '';
-            chart.appendChild(svg);
         }
 
         function createConfetti() {
@@ -677,6 +575,26 @@
                 hitCount++;
                 updateBearImage();
                 updateHitCounter();
+                
+                // Play pump-it sound at 25 hits
+                if (hitCount === 25) {
+                    pumpAudio.play().catch(e => console.log('Pump audio play failed:', e));
+                }
+                
+                // Play higher sound at 50 hits
+                if (hitCount === 50) {
+                    higherAudio.play().catch(e => console.log('Higher audio play failed:', e));
+                }
+                
+                // Play aye sound at 67 hits
+                if (hitCount === 67) {
+                    ayeAudio.play().catch(e => console.log('Aye audio play failed:', e));
+                }
+                
+                // Play killing spree sound at 85 hits
+                if (hitCount === 85) {
+                    killingSpreeAudio.play().catch(e => console.log('Killing spree audio play failed:', e));
+                }
                 
                 // Check for win condition
                 if (hitCount >= 100) {
