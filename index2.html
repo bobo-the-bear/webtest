@@ -12,12 +12,64 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .arrow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.7;
+        }
+
+        .red-arrow {
+            color: #ff0000;
+            animation: fallDown 3s linear infinite;
+        }
+
+        .green-arrow {
+            color: #00ff00;
+            animation: riseUp 3s linear infinite;
+        }
+
+        @keyframes fallDown {
+            0% {
+                top: -50px;
+                opacity: 0.7;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes riseUp {
+            0% {
+                bottom: -50px;
+                opacity: 0.7;
+            }
+            100% {
+                bottom: 100%;
+                opacity: 0;
+            }
         }
 
         .container {
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .bear-container {
@@ -38,16 +90,133 @@
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
         }
 
-        .bat {
+        .candle {
             position: absolute;
-            width: 300px;
+            width: 100px;
             height: auto;
-            top: 50%;
-            left: -350px;
-            transform-origin: bottom right;
             pointer-events: none;
             opacity: 0;
             z-index: 10;
+        }
+
+        @keyframes candleFromTop {
+            0% {
+                left: 50%;
+                top: -200px;
+                transform: translateX(-50%) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                left: 50%;
+                top: 20%;
+                transform: translateX(-50%) rotate(180deg);
+            }
+            100% {
+                left: 50%;
+                top: 100%;
+                transform: translateX(-50%) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromLeft {
+            0% {
+                left: -200px;
+                top: 50%;
+                transform: translateY(-50%) rotate(-90deg);
+                opacity: 1;
+            }
+            50% {
+                left: 40%;
+                top: 30%;
+                transform: translateY(-50%) rotate(90deg);
+            }
+            100% {
+                left: 120%;
+                top: 50%;
+                transform: translateY(-50%) rotate(270deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromRight {
+            0% {
+                left: 120%;
+                top: 50%;
+                transform: translateY(-50%) rotate(90deg);
+                opacity: 1;
+            }
+            50% {
+                left: 60%;
+                top: 30%;
+                transform: translateY(-50%) rotate(-90deg);
+            }
+            100% {
+                left: -200px;
+                top: 50%;
+                transform: translateY(-50%) rotate(-270deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromTopLeft {
+            0% {
+                left: -200px;
+                top: -200px;
+                transform: rotate(-45deg);
+                opacity: 1;
+            }
+            50% {
+                left: 40%;
+                top: 20%;
+                transform: rotate(135deg);
+            }
+            100% {
+                left: 120%;
+                top: 120%;
+                transform: rotate(315deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes candleFromTopRight {
+            0% {
+                left: 120%;
+                top: -200px;
+                transform: rotate(45deg);
+                opacity: 1;
+            }
+            50% {
+                left: 60%;
+                top: 20%;
+                transform: rotate(-135deg);
+            }
+            100% {
+                left: -200px;
+                top: 120%;
+                transform: rotate(-315deg);
+                opacity: 0;
+            }
+        }
+
+        .candle-animate-top {
+            animation: candleFromTop 0.6s ease-out;
+        }
+
+        .candle-animate-left {
+            animation: candleFromLeft 0.6s ease-out;
+        }
+
+        .candle-animate-right {
+            animation: candleFromRight 0.6s ease-out;
+        }
+
+        .candle-animate-topleft {
+            animation: candleFromTopLeft 0.6s ease-out;
+        }
+
+        .candle-animate-topright {
+            animation: candleFromTopRight 0.6s ease-out;
         }
 
         .hit-counter {
@@ -73,44 +242,13 @@
         .shake {
             animation: shake 0.3s;
         }
-
-        @keyframes batSwing {
-            0% {
-                left: -350px;
-                top: -20%;
-                transform: rotate(-90deg);
-                opacity: 0;
-            }
-            20% {
-                opacity: 1;
-            }
-            50% {
-                left: 50%;
-                top: -10%;
-                transform: rotate(0deg) translateX(-50%);
-            }
-            70% {
-                left: 50%;
-                top: -10%;
-                transform: rotate(0deg) translateX(-50%);
-            }
-            100% {
-                left: 120%;
-                top: -20%;
-                transform: rotate(90deg);
-                opacity: 0;
-            }
-        }
-
-        .bat-swing {
-            animation: batSwing 0.6s ease-out;
-        }
     </style>
 </head>
 <body>
+    <div class="arrow-container" id="arrowContainer"></div>
     <div class="container">
         <div class="bear-container" id="bearContainer">
-            <img id="bat" class="bat" src="baseball-bat-png-clipart-3.png" alt="Baseball Bat">
+            <img id="candle" class="candle" src="greencandle.png" alt="Green Candle">
             <img id="bearImage" class="bear-image" src="" alt="Bear">
         </div>
         <div class="hit-counter" id="hitCounter">Hits: 0</div>
@@ -130,28 +268,65 @@
             'b139.png'
         ];
 
-        const soundEffects = [
-            'punch-3.mp3',
-            'weak-punch.mp3',
-            'punch-notification_sound-493565.mp3',
-            'punch_u4LmMsr.mp3',
-            'punch-sound-effect-meme__1_.mp3',
-            'punch-gaming-sound-effect-hd_RzlG1GE.mp3'
+        const candleAnimations = [
+            'candle-animate-top',
+            'candle-animate-left',
+            'candle-animate-right',
+            'candle-animate-topleft',
+            'candle-animate-topright'
         ];
 
         let currentState = 0;
         let hitCount = 0;
         let healTimer = null;
-        let currentSoundIndex = 0;
+        let isGreenMode = false;
 
         const bearImage = document.getElementById('bearImage');
         const bearContainer = document.getElementById('bearContainer');
         const hitCounter = document.getElementById('hitCounter');
-        const bat = document.getElementById('bat');
-        const audio = new Audio();
+        const candle = document.getElementById('candle');
+        const arrowContainer = document.getElementById('arrowContainer');
+        const audio = new Audio('hyper-lazer-gun-roblox.mp3');
 
         // Initialize with base image
         updateBearImage();
+
+        function createArrows() {
+            arrowContainer.innerHTML = '';
+            const arrowCount = 15;
+            
+            for (let i = 0; i < arrowCount; i++) {
+                const arrow = document.createElement('div');
+                arrow.className = 'arrow';
+                arrow.style.left = `${Math.random() * 100}%`;
+                arrow.style.animationDelay = `${Math.random() * 3}s`;
+                
+                if (isGreenMode) {
+                    arrow.classList.add('green-arrow');
+                    arrow.textContent = '↑';
+                    arrow.style.bottom = '-50px';
+                } else {
+                    arrow.classList.add('red-arrow');
+                    arrow.textContent = '↓';
+                    arrow.style.top = '-50px';
+                }
+                
+                arrowContainer.appendChild(arrow);
+            }
+        }
+
+        function switchToGreenMode() {
+            isGreenMode = true;
+            createArrows();
+        }
+
+        function switchToRedMode() {
+            isGreenMode = false;
+            createArrows();
+        }
+
+        // Initialize with red arrows
+        createArrows();
 
         function updateBearImage() {
             bearImage.src = bearStates[currentState];
@@ -169,6 +344,7 @@
                 hitCount = 0;
                 updateBearImage();
                 updateHitCounter();
+                switchToRedMode();
             }, 30000);
         }
 
@@ -177,19 +353,24 @@
         }
 
         bearContainer.addEventListener('click', () => {
-            // Trigger bat swing
-            bat.classList.remove('bat-swing');
-            void bat.offsetWidth; // Force reflow to restart animation
-            bat.classList.add('bat-swing');
+            // Switch to green mode
+            switchToGreenMode();
 
-            // Add shake animation to bear (delayed to sync with bat hit)
+            // Select random candle animation
+            const randomAnimation = candleAnimations[Math.floor(Math.random() * candleAnimations.length)];
+            
+            // Remove all animation classes
+            candleAnimations.forEach(anim => candle.classList.remove(anim));
+            
+            // Trigger candle animation
+            void candle.offsetWidth; // Force reflow to restart animation
+            candle.classList.add(randomAnimation);
+
+            // Play laser sound and update bear (delayed to sync with candle hit)
             setTimeout(() => {
-                // Play sound effect
-                audio.src = soundEffects[currentSoundIndex];
+                // Play laser sound
+                audio.currentTime = 0;
                 audio.play().catch(e => console.log('Audio play failed:', e));
-                
-                // Cycle to next sound effect
-                currentSoundIndex = (currentSoundIndex + 1) % soundEffects.length;
 
                 bearContainer.classList.add('shake');
                 setTimeout(() => {
@@ -203,7 +384,7 @@
                 updateBearImage();
                 updateHitCounter();
                 resetHealTimer();
-            }, 300); // Delay to sync with bat hitting
+            }, 300); // Delay to sync with candle hitting
         });
 
         // Start initial heal timer
