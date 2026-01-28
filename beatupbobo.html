@@ -372,7 +372,7 @@
             <img id="bearImage" class="bear-image" src="" alt="Bear">
         </div>
         <div class="hit-counter" id="hitCounter">Hits: 0</div>
-        <div class="instructions">Click the bear to liquidate him! He'll heal after 30 seconds.</div>
+        <div class="instructions">Click the bear to hit him! He'll heal after 30 seconds.</div>
     </div>
 
     <script>
@@ -417,16 +417,27 @@
         const killingSpreeAudio = new Audio('halo-reach-killing-spree.mp3');
         const cellThemeAudio = new Audio('cell-theme.mp3');
         
-        // Start Cell theme music on page load
+        // Configure and start Cell theme music
         cellThemeAudio.loop = true;
-        cellThemeAudio.play().catch(e => {
-            // If autoplay is blocked, play on first user interaction
-            document.addEventListener('click', () => {
-                if (hitCount === 0) {
-                    cellThemeAudio.play().catch(e => console.log('Cell theme play failed:', e));
-                }
-            }, { once: true });
-        });
+        cellThemeAudio.volume = 0.7;
+        
+        // Attempt to autoplay immediately
+        const playPromise = cellThemeAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                console.log('Autoplay prevented, will play on first interaction');
+                // If autoplay blocked, try again on any user interaction
+                const playOnInteraction = () => {
+                    if (hitCount === 0) {
+                        cellThemeAudio.play().catch(err => console.log('Cell theme play failed:', err));
+                    }
+                    document.removeEventListener('click', playOnInteraction);
+                    document.removeEventListener('keydown', playOnInteraction);
+                };
+                document.addEventListener('click', playOnInteraction);
+                document.addEventListener('keydown', playOnInteraction);
+            });
+        }
 
         // Initialize with base image
         updateBearImage();
