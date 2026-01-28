@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beat Up Bobo</title>
+    <title>Beat Up Bear</title>
     <style>
         body {
             margin: 0;
@@ -30,42 +30,32 @@
             border-top: 2px solid #00ff00;
         }
 
-        .candle-chart {
+        .chart-container {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 0 20px;
-            box-sizing: border-box;
         }
 
-        .candle-stick {
-            position: relative;
-            width: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .candle-wick {
-            width: 2px;
-            background: #00ff00;
+        .chart-line {
             position: absolute;
             bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
-        .candle-body {
-            width: 100%;
-            background: #00ff00;
-            border: 2px solid #00aa00;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        .chart-path {
+            fill: none;
+            stroke: #00ff00;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 10px #00ff00);
+        }
+
+        .chart-fill {
+            fill: url(#chartGradient);
+            opacity: 0.3;
         }
 
         .win-screen {
@@ -498,14 +488,15 @@
         function switchToGreenMode() {
             if (!isGreenMode) {
                 isGreenMode = true;
-                addGreenArrows();
+                addGreenArrows(); // Add green arrows but keep red arrows
             }
         }
 
         function switchToRedMode() {
             isGreenMode = false;
-            arrowContainer.innerHTML = '';
-            createArrows();
+            // Remove only green arrows, keep red arrows
+            const greenArrows = arrowContainer.querySelectorAll('.green-arrow');
+            greenArrows.forEach(arrow => arrow.remove());
         }
 
         // Initialize with red arrows
@@ -534,53 +525,86 @@
         function updateHitCounter() {
             hitCounter.textContent = `Hits: ${hitCount}`;
             
-            // Update progress bar and candle chart
+            // Update progress bar and chart
             const progress = Math.min((hitCount / 100) * 100, 100);
             progressBar.style.height = `${progress}%`;
             
-            // Update candle chart
-            updateCandleChart(progress);
+            // Update linear chart
+            updateLinearChart(progress);
         }
 
-        function updateCandleChart(progress) {
-            const chart = progressBar.querySelector('.candle-chart');
+        function updateLinearChart(progress) {
+            let chart = progressBar.querySelector('.chart-container');
             if (!chart) {
-                const newChart = document.createElement('div');
-                newChart.className = 'candle-chart';
-                progressBar.appendChild(newChart);
+                chart = document.createElement('div');
+                chart.className = 'chart-container';
+                progressBar.appendChild(chart);
             }
             
-            const candleChart = progressBar.querySelector('.candle-chart');
-            candleChart.innerHTML = '';
+            // Create SVG for the line chart
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("class", "chart-line");
+            svg.setAttribute("viewBox", "0 0 100 100");
+            svg.setAttribute("preserveAspectRatio", "none");
             
-            // Create 15 candles
-            const candleCount = 15;
-            const maxHeight = progress; // Maximum height as percentage
+            // Create gradient for fill
+            const defs = document.createElementNS(svgNS, "defs");
+            const gradient = document.createElementNS(svgNS, "linearGradient");
+            gradient.setAttribute("id", "chartGradient");
+            gradient.setAttribute("x1", "0%");
+            gradient.setAttribute("y1", "0%");
+            gradient.setAttribute("x2", "0%");
+            gradient.setAttribute("y2", "100%");
             
-            for (let i = 0; i < candleCount; i++) {
-                const candle = document.createElement('div');
-                candle.className = 'candle-stick';
+            const stop1 = document.createElementNS(svgNS, "stop");
+            stop1.setAttribute("offset", "0%");
+            stop1.setAttribute("style", "stop-color:#00ff00;stop-opacity:0.5");
+            
+            const stop2 = document.createElementNS(svgNS, "stop");
+            stop2.setAttribute("offset", "100%");
+            stop2.setAttribute("style", "stop-color:#00ff00;stop-opacity:0");
+            
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
+            
+            // Generate path data - rising line from left to right
+            const points = 50; // Number of points in the line
+            let pathData = 'M 0 100 '; // Start at bottom left
+            let fillPathData = 'M 0 100 '; // For the filled area
+            
+            for (let i = 0; i <= points; i++) {
+                const x = (i / points) * 100;
+                // Calculate y based on progress - rises from bottom left to top right
+                const baseY = 100 - (progress * (i / points));
+                // Add some variation for realistic stock chart look
+                const variation = Math.sin(i * 0.5) * 3 * (progress / 100);
+                const y = Math.max(0, Math.min(100, baseY + variation));
                 
-                // Progressive height - candles get taller as we progress
-                const baseHeight = (maxHeight / candleCount) * (i + 1);
-                const variation = Math.random() * 10 - 5; // Random variation
-                const candleHeight = Math.max(5, Math.min(maxHeight, baseHeight + variation));
-                
-                // Wick height (slightly taller than body)
-                const wickHeight = candleHeight + Math.random() * 5;
-                
-                const wick = document.createElement('div');
-                wick.className = 'candle-wick';
-                wick.style.height = `${wickHeight}vh`;
-                
-                const body = document.createElement('div');
-                body.className = 'candle-body';
-                body.style.height = `${candleHeight}vh`;
-                
-                candle.appendChild(wick);
-                candle.appendChild(body);
-                candleChart.appendChild(candle);
+                pathData += `L ${x} ${y} `;
+                fillPathData += `L ${x} ${y} `;
             }
+            
+            // Close the fill path
+            fillPathData += 'L 100 100 Z';
+            
+            // Create the fill area
+            const fillPath = document.createElementNS(svgNS, "path");
+            fillPath.setAttribute("class", "chart-fill");
+            fillPath.setAttribute("d", fillPathData);
+            svg.appendChild(fillPath);
+            
+            // Create the line
+            const path = document.createElementNS(svgNS, "path");
+            path.setAttribute("class", "chart-path");
+            path.setAttribute("d", pathData);
+            svg.appendChild(path);
+            
+            // Replace old chart with new one
+            chart.innerHTML = '';
+            chart.appendChild(svg);
         }
 
         function createConfetti() {
