@@ -420,32 +420,11 @@
         updateBearImage();
 
         function createArrows() {
-            // Only create arrows once, don't recreate them
-            if (arrowContainer.children.length > 0) return;
-            
-            const arrowCount = 20;
-            
-            for (let i = 0; i < arrowCount; i++) {
-                const arrow = document.createElement('div');
-                arrow.className = 'arrow';
-                arrow.style.left = `${(i * 5) + Math.random() * 5}%`;
-                arrow.style.animationDelay = `${Math.random() * 4}s`;
-                arrow.style.top = '0';
-                
-                if (isGreenMode) {
-                    arrow.classList.add('green-arrow');
-                    arrow.textContent = '↑';
-                } else {
-                    arrow.classList.add('red-arrow');
-                    arrow.textContent = '↓';
-                }
-                
-                arrowContainer.appendChild(arrow);
-            }
+            // Start with no arrows - only create when green mode activates
         }
 
         function addGreenArrows() {
-            // Add green arrows without removing red ones
+            // Add green arrows
             const arrowCount = 20;
             
             for (let i = 0; i < arrowCount; i++) {
@@ -463,19 +442,17 @@
         function switchToGreenMode() {
             if (!isGreenMode) {
                 isGreenMode = true;
-                addGreenArrows(); // Add green arrows but keep red arrows
+                addGreenArrows();
             }
         }
 
         function switchToRedMode() {
             isGreenMode = false;
-            // Remove only green arrows, keep red arrows
-            const greenArrows = arrowContainer.querySelectorAll('.green-arrow');
-            greenArrows.forEach(arrow => arrow.remove());
+            // Remove all arrows
+            arrowContainer.innerHTML = '';
         }
 
-        // Initialize with red arrows
-        createArrows();
+        // Don't initialize with any arrows
 
         function updateBearImage() {
             bearImage.src = bearStates[currentState];
