@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>// BOBO_BILLIONS_TRACKER</title>
+    <title>BOBO_COIN.EXE // BOBO_BILLIONS_TRACKER</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -134,6 +134,22 @@
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px var(--red-glow));
+            animation: glitch 8s infinite;
         }
 
         .title {
@@ -427,6 +443,10 @@
                 border-width: 1px;
             }
 
+            .logo {
+                max-width: 280px;
+            }
+
             .title {
                 letter-spacing: 2px;
             }
@@ -479,6 +499,15 @@
 
             .terminal-header {
                 margin-bottom: 1rem;
+            }
+
+            .logo-container {
+                padding: 0.5rem 0;
+                margin-bottom: 1rem;
+            }
+
+            .logo {
+                max-width: 220px;
             }
 
             .dot {
@@ -546,6 +575,10 @@
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>
+            </div>
+            
+            <div class="logo-container">
+                <img src="data:image/png;base64,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" alt="BOBO Logo" class="logo">
             </div>
             
             <h1 class="title">BOBO COIN</h1>
@@ -713,7 +746,7 @@
                    target="_blank" 
                    rel="noopener noreferrer" 
                    class="buy-button">
-                    <span>BUY BOBO COIN</span>
+                    <span>▶ BUY BOBO COIN</span>
                 </a>
             `;
         }
