@@ -18,31 +18,54 @@
             position: relative;
         }
 
-        body.flash-green {
-            animation: greenFlash 0.3s ease-out;
-        }
-
-        @keyframes greenFlash {
-            0% {
-                background: #000000;
-            }
-            50% {
-                background: #00ff00;
-            }
-            100% {
-                background: #000000;
-            }
-        }
-
         .progress-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 0%;
-            background: linear-gradient(to top, #00ff00, #00aa00);
+            background: #000000;
             transition: height 0.3s ease-out;
             z-index: 0;
+            border-top: 2px solid #00ff00;
+        }
+
+        .candle-chart {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .candle-stick {
+            position: relative;
+            width: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .candle-wick {
+            width: 2px;
+            background: #00ff00;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .candle-body {
+            width: 100%;
+            background: #00ff00;
+            border: 2px solid #00aa00;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
 
         .win-screen {
@@ -134,36 +157,50 @@
             position: absolute;
             font-size: 40px;
             opacity: 0.7;
+            will-change: transform;
         }
 
         .red-arrow {
             color: #ff0000;
-            animation: fallDown 3s linear infinite;
+            animation: fallDown 4s linear infinite;
         }
 
         .green-arrow {
             color: #00ff00;
-            animation: riseUp 3s linear infinite;
+            animation: riseUp 4s linear infinite;
+            filter: drop-shadow(0 0 5px #00ff00);
         }
 
         @keyframes fallDown {
             0% {
-                top: -50px;
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
                 opacity: 0.7;
             }
             100% {
-                top: 100%;
+                transform: translateY(100vh);
                 opacity: 0;
             }
         }
 
         @keyframes riseUp {
             0% {
-                bottom: -50px;
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
                 opacity: 0.7;
             }
             100% {
-                bottom: 100%;
+                transform: translateY(-100vh);
                 opacity: 0;
             }
         }
@@ -190,6 +227,22 @@
             height: 400px;
             object-fit: contain;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+        }
+
+        .bear-image.flash-green {
+            animation: bearFlash 0.3s ease-out;
+        }
+
+        @keyframes bearFlash {
+            0% {
+                filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)) brightness(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(0, 255, 0, 1)) brightness(3) hue-rotate(90deg);
+            }
+            100% {
+                filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)) brightness(1);
+            }
         }
 
         .candle {
@@ -402,36 +455,56 @@
         updateBearImage();
 
         function createArrows() {
-            arrowContainer.innerHTML = '';
-            const arrowCount = 15;
+            // Only create arrows once, don't recreate them
+            if (arrowContainer.children.length > 0) return;
+            
+            const arrowCount = 20;
             
             for (let i = 0; i < arrowCount; i++) {
                 const arrow = document.createElement('div');
                 arrow.className = 'arrow';
-                arrow.style.left = `${Math.random() * 100}%`;
-                arrow.style.animationDelay = `${Math.random() * 3}s`;
+                arrow.style.left = `${(i * 5) + Math.random() * 5}%`;
+                arrow.style.animationDelay = `${Math.random() * 4}s`;
+                arrow.style.top = '0';
                 
                 if (isGreenMode) {
                     arrow.classList.add('green-arrow');
                     arrow.textContent = '↑';
-                    arrow.style.bottom = '-50px';
                 } else {
                     arrow.classList.add('red-arrow');
                     arrow.textContent = '↓';
-                    arrow.style.top = '-50px';
                 }
                 
                 arrowContainer.appendChild(arrow);
             }
         }
 
+        function addGreenArrows() {
+            // Add green arrows without removing red ones
+            const arrowCount = 20;
+            
+            for (let i = 0; i < arrowCount; i++) {
+                const arrow = document.createElement('div');
+                arrow.className = 'arrow green-arrow';
+                arrow.style.left = `${(i * 5) + Math.random() * 5}%`;
+                arrow.style.animationDelay = `${Math.random() * 4}s`;
+                arrow.style.top = '0';
+                arrow.textContent = '↑';
+                
+                arrowContainer.appendChild(arrow);
+            }
+        }
+
         function switchToGreenMode() {
-            isGreenMode = true;
-            createArrows();
+            if (!isGreenMode) {
+                isGreenMode = true;
+                addGreenArrows();
+            }
         }
 
         function switchToRedMode() {
             isGreenMode = false;
+            arrowContainer.innerHTML = '';
             createArrows();
         }
 
@@ -461,9 +534,53 @@
         function updateHitCounter() {
             hitCounter.textContent = `Hits: ${hitCount}`;
             
-            // Update progress bar
+            // Update progress bar and candle chart
             const progress = Math.min((hitCount / 100) * 100, 100);
             progressBar.style.height = `${progress}%`;
+            
+            // Update candle chart
+            updateCandleChart(progress);
+        }
+
+        function updateCandleChart(progress) {
+            const chart = progressBar.querySelector('.candle-chart');
+            if (!chart) {
+                const newChart = document.createElement('div');
+                newChart.className = 'candle-chart';
+                progressBar.appendChild(newChart);
+            }
+            
+            const candleChart = progressBar.querySelector('.candle-chart');
+            candleChart.innerHTML = '';
+            
+            // Create 15 candles
+            const candleCount = 15;
+            const maxHeight = progress; // Maximum height as percentage
+            
+            for (let i = 0; i < candleCount; i++) {
+                const candle = document.createElement('div');
+                candle.className = 'candle-stick';
+                
+                // Progressive height - candles get taller as we progress
+                const baseHeight = (maxHeight / candleCount) * (i + 1);
+                const variation = Math.random() * 10 - 5; // Random variation
+                const candleHeight = Math.max(5, Math.min(maxHeight, baseHeight + variation));
+                
+                // Wick height (slightly taller than body)
+                const wickHeight = candleHeight + Math.random() * 5;
+                
+                const wick = document.createElement('div');
+                wick.className = 'candle-wick';
+                wick.style.height = `${wickHeight}vh`;
+                
+                const body = document.createElement('div');
+                body.className = 'candle-body';
+                body.style.height = `${candleHeight}vh`;
+                
+                candle.appendChild(wick);
+                candle.appendChild(body);
+                candleChart.appendChild(candle);
+            }
         }
 
         function createConfetti() {
@@ -504,10 +621,10 @@
             // Switch to green mode
             switchToGreenMode();
 
-            // Trigger green flash
-            document.body.classList.remove('flash-green');
-            void document.body.offsetWidth; // Force reflow
-            document.body.classList.add('flash-green');
+            // Trigger green flash on bear
+            bearImage.classList.remove('flash-green');
+            void bearImage.offsetWidth; // Force reflow
+            bearImage.classList.add('flash-green');
 
             // Select random candle animation
             const randomAnimation = candleAnimations[Math.floor(Math.random() * candleAnimations.length)];
