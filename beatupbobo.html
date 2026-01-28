@@ -417,27 +417,9 @@
         const killingSpreeAudio = new Audio('halo-reach-killing-spree.mp3');
         const cellThemeAudio = new Audio('cell-theme.mp3');
         
-        // Configure and start Cell theme music
+        // Configure Cell theme music (will play from first hit to hit 25)
         cellThemeAudio.loop = true;
         cellThemeAudio.volume = 0.7;
-        
-        // Attempt to autoplay immediately
-        const playPromise = cellThemeAudio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.log('Autoplay prevented, will play on first interaction');
-                // If autoplay blocked, try again on any user interaction
-                const playOnInteraction = () => {
-                    if (hitCount === 0) {
-                        cellThemeAudio.play().catch(err => console.log('Cell theme play failed:', err));
-                    }
-                    document.removeEventListener('click', playOnInteraction);
-                    document.removeEventListener('keydown', playOnInteraction);
-                };
-                document.addEventListener('click', playOnInteraction);
-                document.addEventListener('keydown', playOnInteraction);
-            });
-        }
 
         // Initialize with base image
         updateBearImage();
@@ -560,10 +542,9 @@
 
             // Play laser sound and update bear (delayed to sync with candle hit)
             setTimeout(() => {
-                // Stop Cell theme music after first hit
+                // Start Cell theme music on first hit
                 if (hitCount === 0) {
-                    cellThemeAudio.pause();
-                    cellThemeAudio.currentTime = 0;
+                    cellThemeAudio.play().catch(e => console.log('Cell theme play failed:', e));
                 }
                 
                 // Play laser sound
@@ -582,8 +563,10 @@
                 updateBearImage();
                 updateHitCounter();
                 
-                // Play pump-it sound at 25 hits
+                // Play pump-it sound at 25 hits and stop Cell theme
                 if (hitCount === 25) {
+                    cellThemeAudio.pause();
+                    cellThemeAudio.currentTime = 0;
                     pumpAudio.play().catch(e => console.log('Pump audio play failed:', e));
                 }
                 
