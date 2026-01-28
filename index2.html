@@ -77,8 +77,8 @@
         @keyframes batSwing {
             0% {
                 left: -350px;
-                top: 50%;
-                transform: rotate(-45deg);
+                top: -20%;
+                transform: rotate(-90deg);
                 opacity: 0;
             }
             20% {
@@ -86,17 +86,17 @@
             }
             50% {
                 left: 50%;
-                top: 30%;
-                transform: rotate(45deg) translateX(-50%);
+                top: -10%;
+                transform: rotate(0deg) translateX(-50%);
             }
             70% {
                 left: 50%;
-                top: 30%;
-                transform: rotate(45deg) translateX(-50%);
+                top: -10%;
+                transform: rotate(0deg) translateX(-50%);
             }
             100% {
                 left: 120%;
-                top: 20%;
+                top: -20%;
                 transform: rotate(90deg);
                 opacity: 0;
             }
@@ -130,14 +130,25 @@
             'b139.png'
         ];
 
+        const soundEffects = [
+            'punch-3.mp3',
+            'weak-punch.mp3',
+            'punch-notification_sound-493565.mp3',
+            'punch_u4LmMsr.mp3',
+            'punch-sound-effect-meme__1_.mp3',
+            'punch-gaming-sound-effect-hd_RzlG1GE.mp3'
+        ];
+
         let currentState = 0;
         let hitCount = 0;
         let healTimer = null;
+        let currentSoundIndex = 0;
 
         const bearImage = document.getElementById('bearImage');
         const bearContainer = document.getElementById('bearContainer');
         const hitCounter = document.getElementById('hitCounter');
         const bat = document.getElementById('bat');
+        const audio = new Audio();
 
         // Initialize with base image
         updateBearImage();
@@ -173,17 +184,20 @@
 
             // Add shake animation to bear (delayed to sync with bat hit)
             setTimeout(() => {
+                // Play sound effect
+                audio.src = soundEffects[currentSoundIndex];
+                audio.play().catch(e => console.log('Audio play failed:', e));
+                
+                // Cycle to next sound effect
+                currentSoundIndex = (currentSoundIndex + 1) % soundEffects.length;
+
                 bearContainer.classList.add('shake');
                 setTimeout(() => {
                     bearContainer.classList.remove('shake');
                 }, 300);
 
-                // Update bear state when bat makes contact
-                if (currentState < bearStates.length - 1) {
-                    currentState++;
-                } else {
-                    currentState = bearStates.length - 1;
-                }
+                // Randomly select a damaged state (1-8, excluding base state 0)
+                currentState = Math.floor(Math.random() * (bearStates.length - 1)) + 1;
 
                 hitCount++;
                 updateBearImage();
